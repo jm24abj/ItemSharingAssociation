@@ -10,7 +10,7 @@ public class Item {
     private Member donatedBy;
     private Member onLoanTo;
 
-    public Item(String title, String language, String donatedBy) {
+    public Item(String title, String language, Member donatedBy) {
         this.title = title;
         this.language = language;
         // donatedBy is String in constructor but Member field - convert/lookup as needed

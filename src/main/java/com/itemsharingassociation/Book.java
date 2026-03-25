@@ -35,15 +35,6 @@ public class Book extends Item {
 
     @Override
     public String toString() {
-        String donorInfo = (getDonator() != null) ? getDonator().getName() : "Unknown";
-        String loanInfo = (getOnLoanTo() != null) ? getOnLoanTo().getName() : "Available";
-        return "Book{" +
-                "title='" + getTitle() + '\'' +
-                ", author='" + author + '\'' +
-                ", isbn='" + isbn + '\'' +
-                ", language='" + getLanguage() + '\'' +
-                ", donatedBy='" + donorInfo + '\'' +
-                ", onLoanTo='" + loanInfo + '\'' +
-                '}';
+        return "";
     }
 }

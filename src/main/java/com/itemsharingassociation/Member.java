@@ -98,19 +98,6 @@ public class Member {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Member{")
-          .append("name='").append(name).append('\'')
-          .append(", address='").append(address).append('\'')
-          .append(", email='").append(email).append('\'')
-          .append(", donatedQty=").append(donatedQty)
-          .append(", borrowing=").append(borrowing.size()).append(" item(s): [");
-
-        for (int i = 0; i < borrowing.size(); i++) {
-            sb.append(borrowing.get(i).getTitle());
-            if (i < borrowing.size() - 1) sb.append(", ");
-        }
-        sb.append("]}");
-        return sb.toString();
+        return "";
     }
 }

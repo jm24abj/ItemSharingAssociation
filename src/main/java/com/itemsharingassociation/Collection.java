@@ -1,4 +1,4 @@
-
+package com.itemsharingassociation;
 import java.util.ArrayList;
 
 public class Collection {
@@ -9,7 +9,7 @@ public class Collection {
     }
 
     public void addBook(String title, String author, Member donator, String language, String isbn) {
-        Book book = new Book(title, language, donator.getName(), author, isbn);
+        Book book = new Book(title, language, donator, author, isbn);
         items.add(book);
     }
 

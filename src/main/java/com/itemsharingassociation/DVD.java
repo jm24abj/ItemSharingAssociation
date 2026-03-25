@@ -10,13 +10,14 @@ package com.itemsharingassociation;
  *
  * @author br191
  */
-public class DVD {
+public class DVD extends Item{
     private String director;
     private String[] audioLanguages;  
     
     public DVD(String title, String director, Member donatedBy, String language, String[] audioLanguages){
-    this.director = director; 
-    this.audioLanguages = audioLanguages;
+        super(title, language, donatedBy);
+        this.director = director; 
+        this.audioLanguages = audioLanguages;
     
     }
     
@@ -37,10 +38,7 @@ public class DVD {
     
     @Override 
     public String toString() {
-        return "DVD{" +
-                "director='" + director + '\'' +
-                ", audioLanguages=" + java.util.Arrays.toString(audioLanguages) +
-                '}';
+        return "";
     }
     
 }
