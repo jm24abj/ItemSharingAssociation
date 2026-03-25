@@ -1,0 +1,49 @@
+package com.itemsharingassociation;
+
+/**
+ *
+ * @author guney
+ */
+import java.util.ArrayList;
+
+public class Book extends Item {
+
+    private String author;
+    private String isbn;
+
+    public Book(String title, String author, Member donatedBy, String language, String isbn) {
+        super(title, language, donatedBy);
+        this.author = author;
+        this.isbn = isbn;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    @Override
+    public String toString() {
+        String donorInfo = (getDonator() != null) ? getDonator().getName() : "Unknown";
+        String loanInfo = (getOnLoanTo() != null) ? getOnLoanTo().getName() : "Available";
+        return "Book{" +
+                "title='" + getTitle() + '\'' +
+                ", author='" + author + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", language='" + getLanguage() + '\'' +
+                ", donatedBy='" + donorInfo + '\'' +
+                ", onLoanTo='" + loanInfo + '\'' +
+                '}';
+    }
+}
