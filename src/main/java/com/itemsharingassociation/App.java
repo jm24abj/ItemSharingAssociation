@@ -22,7 +22,7 @@ public class App extends Application {
         Scanner fileReader = new Scanner(new File("..\\ItemSharingAssociation\\src\\main\\resources\\input-1.dat"));
         Member currentMember = null;
         while(fileReader.hasNextLine()){
-            String rowOfData [] = fileReader.nextLine().split("|");
+            String rowOfData [] = fileReader.nextLine().split("\\|");
             if (rowOfData[0].equals("Member")){
                 String name = rowOfData[1];
                 String address = rowOfData[2];
@@ -38,7 +38,7 @@ public class App extends Application {
                 String author = rowOfData[2];
                 String isbn = rowOfData[3];
                 String language = rowOfData[4];
-                String borrowerEmail = (rowOfData[5].length() > 5 && !rowOfData[5].isEmpty() ? rowOfData[5] : null);
+                String borrowerEmail = (rowOfData.length > 5 && !rowOfData[5].isEmpty() ? rowOfData[5] : null);
               
                 if (currentMember != null){
                     system.addBook(title, author, currentMember, language, isbn);
@@ -66,6 +66,27 @@ public class App extends Application {
                 String language = rowOfData[2];
                 String director = rowOfData[3];
                 String[] audioLanguages = rowOfData[4].split(",");
+                String borrowerEmail = (rowOfData.length > 5 && !rowOfData[5].isEmpty()? rowOfData[5] : null);
+                
+                // to fix white spaces in file
+                for (int i = 0; i < audioLanguages.length; i++)
+                    audioLanguages[i] = audioLanguages[i].trim();
+                
+                if (currentMember != null){
+                system.addDVD(title, director, currentMember, language, audioLanguages);
+                
+                    if (borrowerEmail != null){
+                        // TODO - need other stuff implemented first
+                    }
+                }
+                
+                else{
+                    system.addDVD(title, director, null, language, audioLanguages);
+                    if (borrowerEmail != null){
+                        // TODO
+                    }
+                
+                }
                 
             }
         }
@@ -75,6 +96,8 @@ public class App extends Application {
            System.out.println(e.toString());
         }
         
+        
+        // placeholder code below
         var javaVersion = SystemInfo.javaVersion();
         var javafxVersion = SystemInfo.javafxVersion();
         var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
