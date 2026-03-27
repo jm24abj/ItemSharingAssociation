@@ -12,21 +12,27 @@ import javafx.stage.Stage;
 
 public class UIEngine extends Application {
     
+    // Contains the different menus so they can be displayed from within other functions
+    private Stage UIStage;
+    private Scene itemSearchScene; 
+    private Scene memberSearchScene;
+    private Scene mainMenuScene;
+    
     private Button setupAddItemButton() {
         Button addItemButton = new Button();
-        addItemButton.setText("Add Items");
+        addItemButton.setText("Add Item");
         return addItemButton;
     }
     
     private Button setupUpdateItemButton() {
         Button updateItemButton = new Button();
-        updateItemButton.setText("Update Items");
+        updateItemButton.setText("Update Item");
         return updateItemButton;
     }
     
     private Button setupRemoveItemButton() {
         Button removeItemButton = new Button();
-        removeItemButton.setText("Remove Items");
+        removeItemButton.setText("Remove Item");
         return removeItemButton;
     }
     
@@ -38,7 +44,7 @@ public class UIEngine extends Application {
     
     private Button setupUpdateMemberButton() {
         Button updateMemberButton = new Button();
-        updateMemberButton.setText("Add Items");
+        updateMemberButton.setText("Add Item");
         return updateMemberButton;
     }
     
@@ -61,12 +67,16 @@ public class UIEngine extends Application {
     }
 
     private VBox getItemOptionsMenu(Item item) {
+        String loanAvailable = (item.isAvailable()) ? "Loan: Available" : ("Owned by" + item.getDonator().getName());
+        
         VBox buttonHolder = new VBox(
+            new Label(item.getTitle()),
+            new Label(loanAvailable),
             setupRemoveItemButton(),
             setupUpdateItemButton()
         );
         
-        if (item.isAvailable()) { // if the item is on loan 
+        if (!item.isAvailable()) { // if the item is on loan 
             
             // if this is true then it needs more options
             // should say full name of member who has the item
@@ -78,19 +88,24 @@ public class UIEngine extends Application {
         return buttonHolder;
     }
     
-    private HBox createTopbar() {
-        return new HBox();
-    }
-    
     private void fillSearchResults(VBox searchResultsArea,String searchText) {
         ArrayList<Item> searchResults = DataLoader.system.searchItems(searchText); // system contains every item in our project (books, dvds etc..)
         searchResultsArea.getChildren().clear();
         for (Item item : searchResults) {
-            searchResultsArea.getChildren().add(new Button(item.getTitle()));
+            Button resultButton = new Button(item.getTitle());
+            resultButton.setMaxHeight(Double.MAX_VALUE);
+            resultButton.setPrefWidth(Double.MAX_VALUE);
+            
+            resultButton.setOnAction((e) -> {
+                memberSearchScene = new Scene(new StackPane(getItemOptionsMenu(item)), 640, 480);
+                UIStage.setScene(memberSearchScene);
+            });
+            
+            searchResultsArea.getChildren().add(resultButton);
         }
     }
     
-    private VBox setupItemSearch() {
+    private VBox setupItemSearchMenu() {
         
         Label labelForSearch = new Label("Search for item");
         TextField searchField = new TextField();
@@ -113,16 +128,16 @@ public class UIEngine extends Application {
     @Override
     public void start(Stage stage) {
         
-        // SETUP
+        // SETUP MISC
+        UIStage = stage;
         ArrayList<Member> members = DataLoader.loadData(); // gets a list of the members from the DataLoader.java file
-        VBox mainMenuButtons = setupItemSearch();
         
-        
-        
-        var scene = new Scene(new StackPane(mainMenuButtons), 640, 480);
-        
-        stage.setScene(scene);
-        stage.show();
+        // SETUP OF ALL MENUS THAT CAN BE SWITCHED BETWEEN
+        itemSearchScene = new Scene(new StackPane(setupItemSearchMenu()), 640, 480);
+        memberSearchScene = new Scene(new StackPane(), 640, 480);
+        // SETTING THE SCENE TO THE MAIN MENU
+        UIStage.setScene(itemSearchScene);
+        UIStage.show();
     }
 
     public static void main(String[] args) {
