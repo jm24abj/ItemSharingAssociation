@@ -59,26 +59,18 @@ public class DataLoader {
               
                 if (currentMember != null){
                     system.addBook(title, author, currentMember, language, isbn);
-                    
-                    if (borrowerEmail != null){
-                       Item book = system.getItem(title);
-                       Member borrower = searchForMember(borrowerEmail,allMembers);
-                       if (borrower != null){
-                           book.loanTo(borrower);
-                       }
-                    }
                 }
-                
                 else{
                     // item belonged to a departed member (won't be in the file)
                     system.addBook(title, author, null, language, isbn);
-                    if (borrowerEmail != null){
-                       Item book = system.getItem(title);
-                       Member borrower = searchForMember(borrowerEmail,allMembers);
-                       if (borrower != null){
-                           book.loanTo(borrower);
-                       }
-                    }
+                }
+                
+                if (borrowerEmail != null){
+                   Item book = system.getItem(title);
+                   Member borrower = searchForMember(borrowerEmail,allMembers);
+                   if (borrower != null){
+                       book.loanTo(borrower);
+                   }
                 }
             }
             else if (lineOfData[0].equals("DVD")){
@@ -93,18 +85,11 @@ public class DataLoader {
                     audioLanguages[i] = audioLanguages[i].trim();
                 
                 if (currentMember != null){
-                system.addDVD(title, director, currentMember, language, audioLanguages);
-                
-                    if (borrowerEmail != null){
-                        Item dvd = system.getItem(title);
-                        Member borrower = searchForMember(borrowerEmail,allMembers);
-                        if (borrower != null){
-                           dvd.loanTo(borrower);
-                       }
-                    }
+                    system.addDVD(title, director, currentMember, language, audioLanguages);
                 }
                 else{
                     system.addDVD(title, director, null, language, audioLanguages);
+                }
                     if (borrowerEmail != null){
                         Item dvd = system.getItem(title);
                         Member borrower = searchForMember(borrowerEmail,allMembers);
@@ -112,8 +97,6 @@ public class DataLoader {
                            dvd.loanTo(borrower);
                        }
                     }
-                
-                }   
             }
         }
         fileReader.close();
