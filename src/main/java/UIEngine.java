@@ -60,6 +60,19 @@ public class UIEngine extends Application {
         return lendItemButton;
     }
     
+    
+    private Button setupBackButton() {
+        Button backItemButton = new Button();
+        backItemButton.setText("Return to menu");
+        backItemButton.setOnAction((e)->{
+            
+            
+            
+            
+        });
+        return backItemButton;
+    }
+    
     private Button setupReturnItemButton() {
         Button returnItemButton = new Button();
         returnItemButton.setText("Return Item");
@@ -72,8 +85,10 @@ public class UIEngine extends Application {
         VBox buttonHolder = new VBox(
             new Label(item.getTitle()),
             new Label(loanAvailable),
+            setupBackButton(),
             setupRemoveItemButton(),
             setupUpdateItemButton()
+            
         );
         
         if (!item.isAvailable()) { // if the item is on loan 
