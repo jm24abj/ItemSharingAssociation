@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -13,8 +14,9 @@ import java.util.Scanner;
  */
 public class App extends Application {
 
-    @Override
-    public void start(Stage stage) {
+    public ArrayList<Member> loadData() {
+        ArrayList<Member> allMembers = new ArrayList<Member>();
+        
         Collection system = new Collection();
 
         try{
@@ -30,8 +32,7 @@ public class App extends Application {
                 String email = lineOfData[3];
                 int donatedQty = Integer.parseInt(lineOfData[4]);
                 currentMember = new Member(name,address,email,donatedQty);
-                // need something that stores the members - arraylist?
-                
+                allMembers.add(currentMember);
             }
             
             else if(lineOfData[0].equals("Book")){
@@ -99,12 +100,13 @@ public class App extends Application {
         } catch (FileNotFoundException e){
            System.out.println(e.toString());
         }
-        
-        
-        // placeholder code below
-        var javaVersion = SystemInfo.javaVersion();
-        var javafxVersion = SystemInfo.javafxVersion();
-        var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
+        return allMembers;
+    }
+    
+    @Override
+    public void start(Stage stage) {
+       
+        var label = new Label("Hello, world!");
         var scene = new Scene(new StackPane(label), 640, 480);
         stage.setScene(scene);
         stage.show();
