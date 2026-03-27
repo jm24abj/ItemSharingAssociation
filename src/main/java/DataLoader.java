@@ -16,22 +16,22 @@ public class DataLoader {
         File dataFile = new File("..\\ItemSharingAssociation\\src\\main\\resources\\input-1.dat");
         
         try{
-            Scanner fileReader = new Scanner(dataFile);
+        Scanner fileReader = new Scanner(dataFile);
         
             // need to have all members loaded before you can load items so loaning works
-            while (fileReader.hasNextLine()){
-                String[] lineOfData = fileReader.nextLine().split("\\|");
-                if (lineOfData[0].equals("Member")){
-                    String name = lineOfData[1];
-                    String address = lineOfData[2];
-                    String email = lineOfData[3];
-                    int donatedQty = Integer.parseInt(lineOfData[4]);
-                    Member newMember = new Member(name,address,email,donatedQty);
-                    allMembers.add(newMember);
-                }
+        while (fileReader.hasNextLine()){
+            String[] lineOfData = fileReader.nextLine().split("\\|");
+            if (lineOfData[0].equals("Member")){
+                String name = lineOfData[1];
+                String address = lineOfData[2];
+                String email = lineOfData[3];
+                int donatedQty = Integer.parseInt(lineOfData[4]);
+                Member newMember = new Member(name,address,email,donatedQty);
+                allMembers.add(newMember);
             }
+        }
         fileReader.close();
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e){
            System.out.println(e.toString());
         }
  
@@ -39,7 +39,9 @@ public class DataLoader {
         // loading items in
         Member currentMember = null;
         try{
+            
         Scanner fileReader = new Scanner(dataFile);
+        
         while(fileReader.hasNextLine()){
             String[] lineOfData = fileReader.nextLine().split("\\|");
             if (lineOfData[0].equals("Member")){
@@ -60,21 +62,23 @@ public class DataLoader {
                     
                     if (borrowerEmail != null){
                        Item book = system.getItem(title);
-                    // TODO - loan
-                    // this part will set a loan
-                    // need to find the member via email - will need a new method
-                    // and a collection of members
+                       Member borrower = searchMember(borrowerEmail,allMembers);
+                       if (borrower != null){
+                           book.loanTo(borrower);
+                       }
                     }
                 }
                 
                 else{
-                    // item belongs to a departed member (won't be in the file)
+                    // item belonged to a departed member (won't be in the file)
                     system.addBook(title, author, null, language, isbn);
                     if (borrowerEmail != null){
-                        Item book = system.getItem(title);
-                        // TODO - loan
+                       Item book = system.getItem(title);
+                       Member borrower = searchMember(borrowerEmail,allMembers);
+                       if (borrower != null){
+                           book.loanTo(borrower);
+                       }
                     }
-                    
                 }
             }
             else if (lineOfData[0].equals("DVD")){
@@ -93,22 +97,25 @@ public class DataLoader {
                 
                     if (borrowerEmail != null){
                         Item dvd = system.getItem(title);
-                        // TODO - loan
+                        Member borrower = searchMember(borrowerEmail,allMembers);
+                        if (borrower != null){
+                           dvd.loanTo(borrower);
+                       }
                     }
                 }
-                
                 else{
                     system.addDVD(title, director, null, language, audioLanguages);
                     if (borrowerEmail != null){
                         Item dvd = system.getItem(title);
-                        // TODO - loan
+                        Member borrower = searchMember(borrowerEmail,allMembers);
+                        if (borrower != null){
+                           dvd.loanTo(borrower);
+                       }
                     }
                 
-                }
-                
+                }   
             }
         }
-        
         fileReader.close();
         } catch (FileNotFoundException e){
            System.out.println(e.toString());
