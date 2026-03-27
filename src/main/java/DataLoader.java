@@ -7,11 +7,11 @@ import java.util.Scanner;
 
 public class DataLoader {
     
+    public static Collection system  = new Collection(); // contains every item in our project (books, dvds etc..)
+    
     public static ArrayList<Member> loadData() {
         ArrayList<Member> allMembers = new ArrayList<Member>();
         
-        Collection system = new Collection();
-
         try{
         Scanner fileReader = new Scanner(new File("..\\ItemSharingAssociation\\src\\main\\resources\\input-1.dat"));
         
