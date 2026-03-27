@@ -10,24 +10,44 @@ public class DataLoader {
     public static Collection system  = new Collection(); // contains every item in our project (books, dvds etc..)
     
     public static ArrayList<Member> loadData() {
+        
         ArrayList<Member> allMembers = new ArrayList<Member>();
         
+        File dataFile = new File("..\\ItemSharingAssociation\\src\\main\\resources\\input-1.dat");
+        
         try{
-        Scanner fileReader = new Scanner(new File("..\\ItemSharingAssociation\\src\\main\\resources\\input-1.dat"));
+            Scanner fileReader = new Scanner(dataFile);
         
+            // need to have all members loaded before you can load items so loaning works
+            while (fileReader.hasNextLine()){
+                String[] lineOfData = fileReader.nextLine().split("\\|");
+                if (lineOfData[0].equals("Member")){
+                    String name = lineOfData[1];
+                    String address = lineOfData[2];
+                    String email = lineOfData[3];
+                    int donatedQty = Integer.parseInt(lineOfData[4]);
+                    Member newMember = new Member(name,address,email,donatedQty);
+                    allMembers.add(newMember);
+                }
+            }
+        fileReader.close();
+        }catch (FileNotFoundException e){
+           System.out.println(e.toString());
+        }
+ 
+        
+        // loading items in
         Member currentMember = null;
-        
+        try{
+        Scanner fileReader = new Scanner(dataFile);
         while(fileReader.hasNextLine()){
             String[] lineOfData = fileReader.nextLine().split("\\|");
             if (lineOfData[0].equals("Member")){
-                String name = lineOfData[1];
-                String address = lineOfData[2];
+                
                 String email = lineOfData[3];
-                int donatedQty = Integer.parseInt(lineOfData[4]);
-                currentMember = new Member(name,address,email,donatedQty);
-                allMembers.add(currentMember);
+                
+                currentMember = searchMember(email,allMembers);
             }
-            
             else if(lineOfData[0].equals("Book")){
                 String title = lineOfData[1];
                 String author = lineOfData[2];
@@ -95,5 +115,11 @@ public class DataLoader {
         }
         return allMembers;
     }
-    
+    public static Member searchMember(String email, ArrayList<Member> allMembers){
+        for(Member member: allMembers){
+            if (member.getEmail().equals(email))
+                return member;
+        }
+        return null;
+    }
 }
