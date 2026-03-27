@@ -48,7 +48,7 @@ public class DataLoader {
                 
                 String email = lineOfData[3];
                 
-                currentMember = searchMember(email,allMembers);
+                currentMember = searchForMember(email,allMembers);
             }
             else if(lineOfData[0].equals("Book")){
                 String title = lineOfData[1];
@@ -62,7 +62,7 @@ public class DataLoader {
                     
                     if (borrowerEmail != null){
                        Item book = system.getItem(title);
-                       Member borrower = searchMember(borrowerEmail,allMembers);
+                       Member borrower = searchForMember(borrowerEmail,allMembers);
                        if (borrower != null){
                            book.loanTo(borrower);
                        }
@@ -74,7 +74,7 @@ public class DataLoader {
                     system.addBook(title, author, null, language, isbn);
                     if (borrowerEmail != null){
                        Item book = system.getItem(title);
-                       Member borrower = searchMember(borrowerEmail,allMembers);
+                       Member borrower = searchForMember(borrowerEmail,allMembers);
                        if (borrower != null){
                            book.loanTo(borrower);
                        }
@@ -97,7 +97,7 @@ public class DataLoader {
                 
                     if (borrowerEmail != null){
                         Item dvd = system.getItem(title);
-                        Member borrower = searchMember(borrowerEmail,allMembers);
+                        Member borrower = searchForMember(borrowerEmail,allMembers);
                         if (borrower != null){
                            dvd.loanTo(borrower);
                        }
@@ -107,7 +107,7 @@ public class DataLoader {
                     system.addDVD(title, director, null, language, audioLanguages);
                     if (borrowerEmail != null){
                         Item dvd = system.getItem(title);
-                        Member borrower = searchMember(borrowerEmail,allMembers);
+                        Member borrower = searchForMember(borrowerEmail,allMembers);
                         if (borrower != null){
                            dvd.loanTo(borrower);
                        }
@@ -122,7 +122,7 @@ public class DataLoader {
         }
         return allMembers;
     }
-    public static Member searchMember(String email, ArrayList<Member> allMembers){
+    public static Member searchForMember(String email, ArrayList<Member> allMembers){
         for(Member member: allMembers){
             if (member.getEmail().equals(email))
                 return member;
