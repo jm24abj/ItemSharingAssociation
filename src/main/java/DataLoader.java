@@ -1,20 +1,12 @@
-
-
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * JavaFX App
- */
-public class App extends Application {
 
-    public ArrayList<Member> loadData() {
+public class DataLoader {
+    
+    public static ArrayList<Member> loadData() {
         ArrayList<Member> allMembers = new ArrayList<Member>();
         
         Collection system = new Collection();
@@ -103,17 +95,4 @@ public class App extends Application {
         return allMembers;
     }
     
-    @Override
-    public void start(Stage stage) {
-       
-        var label = new Label("Hello, world!");
-        var scene = new Scene(new StackPane(label), 640, 480);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch();
-    }
-
 }

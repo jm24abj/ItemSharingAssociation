@@ -31,7 +31,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
-                    <mainClass>App</mainClass>
+                    <mainClass>UIEngine</mainClass>
                 </configuration>
                 <executions>
                     <execution>
