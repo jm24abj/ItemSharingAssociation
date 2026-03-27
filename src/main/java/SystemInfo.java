@@ -1,4 +1,4 @@
-package com.itemsharingassociation;
+
 
 public class SystemInfo {
 

@@ -1,4 +1,4 @@
-package com.itemsharingassociation;
+
 
 import javafx.application.Application;
 import javafx.scene.Scene;

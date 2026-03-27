@@ -1,4 +1,4 @@
-package com.itemsharingassociation;
+
 import java.util.ArrayList;
 
 public class Collection {
