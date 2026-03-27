@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// To add new data into the data file go to Other Sources/src/main/resources/input-1.dat
 
 public class DataLoader {
     
