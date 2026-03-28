@@ -74,7 +74,6 @@ public class Member {
         if (borrowing.size() >= donatedQty) {
             return false;
         }
-        System.out.println("Borrowing : " + item.getTitle());
         borrowing.add(item);
         return true;
     }

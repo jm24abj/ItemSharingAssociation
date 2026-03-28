@@ -20,15 +20,22 @@ public class UIEngine extends Application {
     private Scene memberDetailsScene;
     private Scene mainMenuScene;
     
-    private Button setupUpdateMemberButton() {
+    private Button setupUpdateMemberButton(ArrayList<Member> allMembers, Member member) {
         Button updateMemberButton = new Button();
-        updateMemberButton.setText("Add Item");
+        updateMemberButton.setText("Update Member");
         return updateMemberButton;
     }
     
-    private Button setupRemoveMemberButton() {
+    private Button setupRemoveMemberButton(ArrayList<Member> allMembers, Member member) {
         Button removeMemberButton = new Button();
-        removeMemberButton.setText("Update Member");
+        removeMemberButton.setText("Remove Member");
+        
+        removeMemberButton.setOnAction((e) -> {
+            allMembers.remove(member);
+            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(allMembers)), 640, 480);
+            UIStage.setScene(memberSearchScene);
+        });
+        
         return removeMemberButton;
     }
     
@@ -70,7 +77,7 @@ public class UIEngine extends Application {
         return returnItemButton;
     }
     
-    private VBox getMemberDetailsMenu(Member member) {
+    private VBox getMemberDetailsMenu(ArrayList<Member> allMembers,Member member) {
         Button backItemButton = new Button();
         backItemButton.setText("Return to menu");
         backItemButton.setOnAction((e)->{
@@ -85,8 +92,8 @@ public class UIEngine extends Application {
             new Label("Numer of Items Borrowing : " + Integer.toString(member.borrowingQty())),
             new Label("Borrowing : " + member.toString()),
             backItemButton,
-            setupRemoveMemberButton(),
-            setupUpdateMemberButton()
+            setupRemoveMemberButton(allMembers,member),
+            setupUpdateMemberButton(allMembers,member)
         );
         return buttonHolder;
     }
@@ -173,7 +180,7 @@ public class UIEngine extends Application {
             resultButton.setPrefWidth(Double.MAX_VALUE);
             
             resultButton.setOnAction((e) -> {
-                memberDetailsScene = new Scene(new StackPane(getMemberDetailsMenu(member)), 640, 480);
+                memberDetailsScene = new Scene(new StackPane(getMemberDetailsMenu(members,member)), 640, 480);
                 UIStage.setScene(memberDetailsScene);
             });
             
