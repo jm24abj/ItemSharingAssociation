@@ -18,7 +18,9 @@ public class DataLoader {
         Member currentMember = null;
         
         while(fileReader.hasNextLine()){
-            String[] lineOfData = fileReader.nextLine().split("\\|");
+            String newLine = fileReader.nextLine();
+            String[] lineOfData = newLine.split("\\|");
+     
             if (lineOfData[0].equals("Member")){
                 String name = lineOfData[1];
                 String address = lineOfData[2];
@@ -34,8 +36,8 @@ public class DataLoader {
                 String isbn = lineOfData[3];
                 String language = lineOfData[4];
                 String borrowerEmail = (lineOfData.length > 5 && !lineOfData[5].isEmpty()) ? lineOfData[5] : null;
-              
-                if (currentMember != null){
+
+                if (currentMember != null){       
                     system.addBook(title, author, currentMember, language, isbn);
                     
                     if (borrowerEmail != null){
@@ -69,7 +71,7 @@ public class DataLoader {
                     audioLanguages[i] = audioLanguages[i].trim();
                 
                 if (currentMember != null){
-                system.addDVD(title, director, currentMember, language, audioLanguages);
+                    system.addDVD(title, director, currentMember, language, audioLanguages);
                 
                     if (borrowerEmail != null){
                         Item dvd = system.getItem(title);

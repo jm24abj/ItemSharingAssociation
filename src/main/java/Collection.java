@@ -9,7 +9,7 @@ public class Collection {
     }
 
     public void addBook(String title, String author, Member donator, String language, String isbn) {
-        Book book = new Book(title, language, donator, author, isbn);
+        Book book = new Book(title, author, donator, language, isbn);
         items.add(book);
     }
 
