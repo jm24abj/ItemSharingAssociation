@@ -33,7 +33,12 @@ public class Item {
     }
 
     public void loanTo(Member borrower) {
+        System.out.println(borrower.getName());
         this.onLoanTo = borrower;
+    }
+    
+    public Member getLoanMember() {
+        return onLoanTo;
     }
 
     public boolean isAvailable() {

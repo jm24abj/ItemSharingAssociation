@@ -23,15 +23,22 @@ public class UIEngine extends Application {
         return addItemButton;
     }
     
-    private Button setupUpdateItemButton() {
+    private Button setupUpdateItemButton(Item item) {
         Button updateItemButton = new Button();
         updateItemButton.setText("Update Item");
         return updateItemButton;
     }
     
-    private Button setupRemoveItemButton() {
+    private Button setupRemoveItemButton(Item item) {
         Button removeItemButton = new Button();
         removeItemButton.setText("Remove Item");
+        
+        removeItemButton.setOnAction((e) -> {
+            DataLoader.system.removeItem(item);
+            itemSearchScene = new Scene(new StackPane(setupItemSearchMenu()), 640, 480);
+            UIStage.setScene(itemSearchScene);
+        });
+        
         return removeItemButton;
     }
     
@@ -53,23 +60,29 @@ public class UIEngine extends Application {
         return removeMemberButton;
     }
     
-    private Button setupLendItemButton() {
+    private Button setupLendItemButton(Item item) {
         Button lendItemButton = new Button();
         lendItemButton.setText("Lend Item");
         return lendItemButton;
     }
     
-    private Button setupReturnItemButton() {
+    private Button setupReturnItemButton(Item item) {
         Button returnItemButton = new Button();
         returnItemButton.setText("Return Item");
+        
+        returnItemButton.setOnAction((e) -> {
+            item.returnLoan();
+            itemDetailsScene = new Scene(new StackPane(getItemOptionsMenu(item)), 640, 480);
+            UIStage.setScene(itemDetailsScene);
+        });
+        
         return returnItemButton;
     }
 
     private VBox getItemOptionsMenu(Item item) {
         String loanAvailable = "Loan: Available";
-        
-        if (!item.isAvailable() && item.getDonator() != null) {
-            loanAvailable = "Owned by" + item.getDonator().getName();
+        if (!item.isAvailable() && item.getLoanMember() != null) {
+            loanAvailable = "Loaned to " + item.getLoanMember().getName();
         }
         
         Button backItemButton = new Button();
@@ -84,6 +97,10 @@ public class UIEngine extends Application {
             new Label(loanAvailable)
         );
         
+        if (item.getDonator() != null) {
+            buttonHolder.getChildren().add(new Label(item.getDonator().getName()));
+        }
+        
         if (item instanceof Book) {
             Book book = (Book) item;
             buttonHolder.getChildren().addAll(new Label("Author : " + book.getAuthor()),new Label("ISBN : " + book.getIsbn()));
@@ -94,14 +111,15 @@ public class UIEngine extends Application {
         
         buttonHolder.getChildren().addAll(
             backItemButton,
-            setupRemoveItemButton(),
-            setupUpdateItemButton()
+            setupRemoveItemButton(item),
+            setupUpdateItemButton(item)
         );
         
         if (!item.isAvailable()) { // if the item is on loan 
             // if this is true then it needs more options
-            buttonHolder.getChildren().add(setupLendItemButton());
-            buttonHolder.getChildren().add(setupReturnItemButton());
+            buttonHolder.getChildren().add(setupReturnItemButton(item));
+        } else {
+            buttonHolder.getChildren().add(setupLendItemButton(item));
         }
         
         return buttonHolder;
