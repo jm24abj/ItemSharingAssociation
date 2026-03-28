@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -14,7 +15,7 @@ public class UIEngine extends Application {
     // Contains the different menus so they can be displayed from within other functions
     private Stage UIStage;
     private Scene itemSearchScene; 
-    private Scene itemDetailsScene;
+    private Scene memberSearchScene;
     private Scene mainMenuScene;
     
     private Button setupAddItemButton() {
@@ -59,6 +60,19 @@ public class UIEngine extends Application {
         return lendItemButton;
     }
     
+    
+    private Button setupBackButton() {
+        Button backItemButton = new Button();
+        backItemButton.setText("Return to menu");
+        backItemButton.setOnAction((e)->{
+            
+            
+            
+            
+        });
+        return backItemButton;
+    }
+    
     private Button setupReturnItemButton() {
         Button returnItemButton = new Button();
         returnItemButton.setText("Return Item");
@@ -68,34 +82,20 @@ public class UIEngine extends Application {
     private VBox getItemOptionsMenu(Item item) {
         String loanAvailable = (item.isAvailable()) ? "Loan: Available" : ("Owned by" + item.getDonator().getName());
         
-        Button backItemButton = new Button();
-        backItemButton.setText("Return to menu");
-        backItemButton.setOnAction((e)->{
-            UIStage.setScene(itemSearchScene); // sets the current scene back to the search menu
-        });
-        
         VBox buttonHolder = new VBox(
             new Label(item.getTitle()),
-            new Label("Language : " + item.getLanguage()),
-            new Label(loanAvailable)
-        );
-        
-        if (item instanceof Book) {
-            Book book = (Book) item;
-            buttonHolder.getChildren().addAll(new Label("Author : " + book.getAuthor()),new Label("ISBN : " + book.getIsbn()));
-        } else {
-            DVD dvd = (DVD) item;
-            buttonHolder.getChildren().addAll(new Label("Director : " + dvd.getDirector()), new Label(dvd.toString()));
-        }
-        
-        buttonHolder.getChildren().addAll(
-            backItemButton,
+            new Label(loanAvailable),
+            setupBackButton(),
             setupRemoveItemButton(),
             setupUpdateItemButton()
+            
         );
         
         if (!item.isAvailable()) { // if the item is on loan 
+            
             // if this is true then it needs more options
+            // should say full name of member who has the item
+            
             buttonHolder.getChildren().add(setupLendItemButton());
             buttonHolder.getChildren().add(setupReturnItemButton());
         }
@@ -112,8 +112,8 @@ public class UIEngine extends Application {
             resultButton.setPrefWidth(Double.MAX_VALUE);
             
             resultButton.setOnAction((e) -> {
-                itemDetailsScene = new Scene(new StackPane(getItemOptionsMenu(item)), 640, 480);
-                UIStage.setScene(itemDetailsScene);
+                memberSearchScene = new Scene(new StackPane(getItemOptionsMenu(item)), 640, 480);
+                UIStage.setScene(memberSearchScene);
             });
             
             searchResultsArea.getChildren().add(resultButton);
@@ -149,7 +149,7 @@ public class UIEngine extends Application {
         
         // SETUP OF ALL MENUS THAT CAN BE SWITCHED BETWEEN
         itemSearchScene = new Scene(new StackPane(setupItemSearchMenu()), 640, 480);
-        itemDetailsScene = new Scene(new StackPane(), 640, 480);
+        memberSearchScene = new Scene(new StackPane(), 640, 480);
         // SETTING THE SCENE TO THE MAIN MENU
         UIStage.setScene(itemSearchScene);
         UIStage.show();

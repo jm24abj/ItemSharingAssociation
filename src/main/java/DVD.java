@@ -36,17 +36,9 @@ public class DVD extends Item{
       
     }
     
-    public String[] getAudioLanguages() {
-        return this.audioLanguages;
-    }
-    
     @Override 
     public String toString() {
-        String returnString = "Audio Languages: ";
-        for (int i = 0; i < audioLanguages.length; i++) {
-            returnString += this.audioLanguages[i] + " | ";
-        }
-        return returnString;
+        return "";
     }
     
 }
