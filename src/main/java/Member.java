@@ -61,43 +61,34 @@ public class Member {
         this.email = email;
     }
 
-    /**
-     * Returns the maximum number of items this member can borrow.
-     * Min of 5 or number of items donated.
-     */
     public int borrowingQty() {
-        return Math.min(5, donatedQty);
+        return borrowing.size();
     }
-
-    /**
-     * Adds a donated item to this member's donated list and increments donated count.
-     */
+    
     public void addDonation(Item item) {
         donatedItems.add(item);
         donatedQty++;
     }
 
-    /**
-     * Records that this member has borrowed an item.
-     * Returns false if the member has already reached their borrowing limit.
-     */
     public boolean lend(Item item) {
-        if (borrowing.size() >= borrowingQty()) {
+        if (borrowing.size() >= donatedQty) {
             return false;
         }
+        System.out.println("Borrowing : " + item.getTitle());
         borrowing.add(item);
         return true;
     }
 
-    /**
-     * Returns an item — removes it from the borrowing list.
-     */
     public void returnItem(Item item) {
         borrowing.remove(item);
     }
 
     @Override
-    public String toString() {
-        return "";
+    public String toString() { // returns a list of all the items theyre borrowing for the UI 
+        String borrowingItemsString = "";
+        for (Item item : getLoanItems()) {
+            borrowingItemsString += item.getTitle() + " | ";
+        } 
+        return borrowingItemsString;
     }
 }

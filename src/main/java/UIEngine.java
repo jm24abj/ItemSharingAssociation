@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -14,16 +13,12 @@ public class UIEngine extends Application {
     
     // Contains the different menus so they can be displayed from within other functions
     private Stage UIStage;
+    
     private Scene itemSearchScene; 
     private Scene memberSearchScene; 
     private Scene itemDetailsScene;
+    private Scene memberDetailsScene;
     private Scene mainMenuScene;
-    
-    private Button setupAddMemberButton() {
-        Button addMemberButton = new Button();
-        addMemberButton.setText("Add Member");
-        return addMemberButton;
-    }
     
     private Button setupUpdateMemberButton() {
         Button updateMemberButton = new Button();
@@ -35,12 +30,6 @@ public class UIEngine extends Application {
         Button removeMemberButton = new Button();
         removeMemberButton.setText("Update Member");
         return removeMemberButton;
-    }
-    
-    private Button setupAddItemButton() {
-        Button addItemButton = new Button();
-        addItemButton.setText("Add Item");
-        return addItemButton;
     }
     
     private Button setupUpdateItemButton(Item item) {
@@ -74,14 +63,35 @@ public class UIEngine extends Application {
         
         returnItemButton.setOnAction((e) -> {
             item.returnLoan();
-            itemDetailsScene = new Scene(new StackPane(getItemOptionsMenu(item)), 640, 480);
+            itemDetailsScene = new Scene(new StackPane(getItemDetailsMenu(item)), 640, 480);
             UIStage.setScene(itemDetailsScene);
         });
         
         return returnItemButton;
     }
+    
+    private VBox getMemberDetailsMenu(Member member) {
+        Button backItemButton = new Button();
+        backItemButton.setText("Return to menu");
+        backItemButton.setOnAction((e)->{
+            UIStage.setScene(memberSearchScene); // sets the current scene back to the search menu
+        });
+        
+        VBox buttonHolder = new VBox(
+            new Label(member.getName()),
+            new Label("Address : " + member.getAddress()),
+            new Label("Email : " + member.getEmail()),
+            new Label("Number of Items Donated : " + Integer.toString(member.getDonatedQty())),
+            new Label("Numer of Items Borrowing : " + Integer.toString(member.borrowingQty())),
+            new Label("Borrowing : " + member.toString()),
+            backItemButton,
+            setupRemoveMemberButton(),
+            setupUpdateMemberButton()
+        );
+        return buttonHolder;
+    }
 
-    private VBox getItemOptionsMenu(Item item) {
+    private VBox getItemDetailsMenu(Item item) {
         String loanAvailable = "Loan: Available";
         if (!item.isAvailable() && item.getLoanMember() != null) {
             loanAvailable = "Loaned to " + item.getLoanMember().getName();
@@ -136,7 +146,7 @@ public class UIEngine extends Application {
             resultButton.setPrefWidth(Double.MAX_VALUE);
             
             resultButton.setOnAction((e) -> {
-                itemDetailsScene = new Scene(new StackPane(getItemOptionsMenu(item)), 640, 480);
+                itemDetailsScene = new Scene(new StackPane(getItemDetailsMenu(item)), 640, 480);
                 UIStage.setScene(itemDetailsScene);
             });
             
@@ -163,8 +173,8 @@ public class UIEngine extends Application {
             resultButton.setPrefWidth(Double.MAX_VALUE);
             
             resultButton.setOnAction((e) -> {
-                //itemDetailsScene = new Scene(new StackPane(getItemOptionsMenu(item)), 640, 480);
-                //UIStage.setScene(itemDetailsScene);
+                memberDetailsScene = new Scene(new StackPane(getMemberDetailsMenu(member)), 640, 480);
+                UIStage.setScene(memberDetailsScene);
             });
             
             searchResultsArea.getChildren().add(resultButton);

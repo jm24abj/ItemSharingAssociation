@@ -33,7 +33,7 @@ public class Item {
     }
 
     public void loanTo(Member borrower) {
-        System.out.println(borrower.getName());
+        borrower.lend(this);
         this.onLoanTo = borrower;
     }
     
