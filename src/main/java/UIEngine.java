@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -14,8 +15,27 @@ public class UIEngine extends Application {
     // Contains the different menus so they can be displayed from within other functions
     private Stage UIStage;
     private Scene itemSearchScene; 
+    private Scene memberSearchScene; 
     private Scene itemDetailsScene;
     private Scene mainMenuScene;
+    
+    private Button setupAddMemberButton() {
+        Button addMemberButton = new Button();
+        addMemberButton.setText("Add Member");
+        return addMemberButton;
+    }
+    
+    private Button setupUpdateMemberButton() {
+        Button updateMemberButton = new Button();
+        updateMemberButton.setText("Add Item");
+        return updateMemberButton;
+    }
+    
+    private Button setupRemoveMemberButton() {
+        Button removeMemberButton = new Button();
+        removeMemberButton.setText("Update Member");
+        return removeMemberButton;
+    }
     
     private Button setupAddItemButton() {
         Button addItemButton = new Button();
@@ -40,24 +60,6 @@ public class UIEngine extends Application {
         });
         
         return removeItemButton;
-    }
-    
-    private Button setupAddMemberButton() {
-        Button addMemberButton = new Button();
-        addMemberButton.setText("Add Member");
-        return addMemberButton;
-    }
-    
-    private Button setupUpdateMemberButton() {
-        Button updateMemberButton = new Button();
-        updateMemberButton.setText("Add Item");
-        return updateMemberButton;
-    }
-    
-    private Button setupRemoveMemberButton() {
-        Button removeMemberButton = new Button();
-        removeMemberButton.setText("Update Member");
-        return removeMemberButton;
     }
     
     private Button setupLendItemButton(Item item) {
@@ -142,7 +144,68 @@ public class UIEngine extends Application {
         }
     }
     
+    private ArrayList<Member> searchMembers(ArrayList<Member> members, String searchText) {
+        ArrayList<Member> searchResults = new ArrayList<Member>();
+        for (Member member : members) {
+            if (member.getName().toLowerCase().contains(searchText.toLowerCase())) {
+                searchResults.add(member);
+            }
+        }
+        return searchResults;
+    } 
+    
+    private void fillSearchResults(VBox searchResultsArea,String searchText, ArrayList<Member> members) {
+        ArrayList<Member> searchResults = searchMembers(members,searchText);
+        searchResultsArea.getChildren().clear();
+        for (Member member : searchResults) {
+            Button resultButton = new Button(member.getName());
+            resultButton.setMaxHeight(Double.MAX_VALUE);
+            resultButton.setPrefWidth(Double.MAX_VALUE);
+            
+            resultButton.setOnAction((e) -> {
+                //itemDetailsScene = new Scene(new StackPane(getItemOptionsMenu(item)), 640, 480);
+                //UIStage.setScene(itemDetailsScene);
+            });
+            
+            searchResultsArea.getChildren().add(resultButton);
+        }
+    }
+    
     private VBox setupItemSearchMenu() {
+
+        
+        Button returnButton = new Button("Return To Main Menu");
+        
+        returnButton.setOnAction((e) -> {
+            UIStage.setScene(mainMenuScene);
+        });
+        
+        Label labelForSearch = new Label("Search for item");
+        TextField searchField = new TextField();
+        searchField.setPromptText("Enter item name");
+        
+        VBox searchArea = new VBox(labelForSearch,searchField);
+        VBox searchResultsArea = new VBox();
+
+        fillSearchResults(searchResultsArea,"");
+
+        
+        searchField.setOnKeyPressed((e) -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                fillSearchResults(searchResultsArea,searchField.getText());
+            }
+        });
+        
+        return new VBox(returnButton,searchArea,searchResultsArea);
+    }
+    
+    private VBox setupMemberSearchMenu(ArrayList<Member> members) {
+
+        Button returnButton = new Button("Return To Main Menu");
+        
+        returnButton.setOnAction((e) -> {
+            UIStage.setScene(mainMenuScene);
+        });
         
         Label labelForSearch = new Label("Search for item");
         TextField searchField = new TextField();
@@ -151,15 +214,48 @@ public class UIEngine extends Application {
         VBox searchArea = new VBox(labelForSearch,searchField);
         VBox searchResultsArea = new VBox();
         
-        fillSearchResults(searchResultsArea,"");
+
+        fillSearchResults(searchResultsArea,"", members);
+
         
         searchField.setOnKeyPressed((e) -> {
             if (e.getCode().equals(KeyCode.ENTER)) {
-                fillSearchResults(searchResultsArea,searchField.getText());
+
+                fillSearchResults(searchResultsArea,searchField.getText(), members);
+
             }
         });
         
-        return new VBox(searchArea,searchResultsArea);
+        return new VBox(returnButton,searchArea,searchResultsArea);
+    }
+    
+    public StackPane setupMainMenu(ArrayList<Member> members) {
+        Button searchItemsButton = new Button("Search Items");
+        Button searchMembersButton = new Button("Search Members");
+        Button addMemberButton = new Button("Add Item");
+        Button addItemButton = new Button("Add Member");
+        
+        searchItemsButton.setOnAction((e) -> {
+            itemSearchScene = new Scene(new StackPane(setupItemSearchMenu()), 640, 480);
+            UIStage.setScene(itemSearchScene);
+        });
+        
+        searchMembersButton.setOnAction((e) -> {
+            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(members)), 640, 480);
+            UIStage.setScene(memberSearchScene);
+        });
+        
+        addMemberButton.setOnAction((e) -> {
+            
+        });
+        
+        addItemButton.setOnAction((e) -> {
+            
+        });
+        
+        VBox vbox = new VBox(searchItemsButton,searchMembersButton,addMemberButton,addItemButton);
+        StackPane scene = new StackPane(vbox);
+        return scene;
     }
     
     @Override
@@ -169,11 +265,9 @@ public class UIEngine extends Application {
         UIStage = stage;
         ArrayList<Member> members = DataLoader.loadData(); // gets a list of the members from the DataLoader.java file
         
-        // SETUP OF ALL MENUS THAT CAN BE SWITCHED BETWEEN
-        itemSearchScene = new Scene(new StackPane(setupItemSearchMenu()), 640, 480);
-        itemDetailsScene = new Scene(new StackPane(), 640, 480);
-        // SETTING THE SCENE TO THE MAIN MENU
-        UIStage.setScene(itemSearchScene);
+        //SETUP AND LODING MAIN MENU
+        mainMenuScene = new Scene(setupMainMenu(members), 640, 480);
+        UIStage.setScene(mainMenuScene);
         UIStage.show();
     }
 
