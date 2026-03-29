@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -203,6 +204,81 @@ public class UIEngine extends Application {
         }
     }
     
+    private String[] convertFieldsToAudioLanguages(VBox audioLanguagesHolder) {
+        ArrayList<String> audioLanguages = new  ArrayList<String>();
+        for (Node node : audioLanguagesHolder.getChildren()) {
+            if (node instanceof TextField) {
+                audioLanguages.add(((TextField) node).getText());
+            }
+        }
+        return audioLanguages.toArray(new String[audioLanguages.size()]);
+    }
+    
+    private void createAddDVDMenu(ComboBox itemType,ComboBox donatedBy,Button createButton) {
+        VBox dvdMenu = new VBox();
+        
+        VBox audioLanguages = new VBox();
+        TextField audioLanguage = new TextField();
+        audioLanguage.setPromptText("Audio Language");
+     
+        Button addAudioLanguage = new Button("Add Language");
+        
+        audioLanguages.getChildren().add(audioLanguage);
+        addAudioLanguage.setOnAction((e) -> {
+            TextField newAudioLanguage = new TextField();
+            audioLanguage.setPromptText("Audio Language");
+            audioLanguages.getChildren().add(newAudioLanguage);
+        });
+        
+        Label errorDisplay = new Label ("");
+        errorDisplay.setTextFill(Color.RED);
+        
+        TextField titleField = new TextField();
+        titleField.setPromptText("Title");
+        TextField directorField = new TextField();
+        directorField.setPromptText("Director");
+        TextField languageField = new TextField();
+        languageField.setPromptText("Language");
+        
+        Button backButton = new Button("Return to Main Menu");
+        backButton.setOnAction((e) -> {
+            UIStage.setScene(mainMenuScene);
+        });
+        
+        createButton.setOnAction((e) -> {
+            if (itemType.getValue() == null) {
+                errorDisplay.setText("No Item Type Selected!");
+            } else if (donatedBy.getValue() == null){
+                errorDisplay.setText("No Donator Selected!");
+            } else if (titleField.getText() == "" || directorField.getText() == "" || languageField.getText() == "") {
+                errorDisplay.setText("Must Fill All Fields!");
+            } else {
+                String[] allAudioLanguages = convertFieldsToAudioLanguages(audioLanguages);
+                String title = titleField.getText();
+                String author = directorField.getText();
+                String language = languageField.getText();
+                DataLoader.system.addDVD(title, author, (Member) donatedBy.getValue(),language,allAudioLanguages);
+                UIStage.setScene(mainMenuScene);
+            }
+        });
+        
+        dvdMenu.getChildren().addAll(
+                backButton,
+                errorDisplay,
+                new Label("Item Type"), itemType,
+                new Label("Title"), titleField,
+                new Label("Director"),directorField,
+                new Label("Language"), languageField,
+                new Label("Audio Languages"),audioLanguages,addAudioLanguage,
+                new Label ("Donated By"), donatedBy,
+                createButton
+        );
+        
+        addItemScene = new Scene(new StackPane(dvdMenu), 640, 480);
+        UIStage.setScene(addItemScene);
+        
+    }
+    
     private void createAddBookMenu(ComboBox itemType,ComboBox donatedBy,Button createButton) {
         VBox bookMenu = new VBox();
         
@@ -257,15 +333,6 @@ public class UIEngine extends Application {
         
     }
     
-    private void createAddDVDMenu(ComboBox itemType,ComboBox donatedBy,Button createButton) {
-       
-    }
-    
-    private VBox createAddDVDMenu() {
-        
-        return new VBox(new Label("dvd"));
-    }
-    
     private void setupAddItemMenu(ArrayList<Member> members) {
         
         VBox itemMenu = new VBox();
@@ -296,6 +363,7 @@ public class UIEngine extends Application {
                         createAddBookMenu(itemType,donatedBy,submit);
                         break;
                     case "DVD":
+                        createAddDVDMenu(itemType,donatedBy,submit);
                         break;
                 }
             }
