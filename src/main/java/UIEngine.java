@@ -67,7 +67,11 @@ public class UIEngine extends Application {
         removeItemButton.setText("Remove Item");
         
         removeItemButton.setOnAction((e) -> {
+            if (item.getLoanMember() != null) {
+                item.getLoanMember().returnItem(item);
+            }
             DataLoader.system.removeItem(item);
+            
             itemSearchScene = new Scene(new StackPane(setupItemSearchMenu()), 640, 480);
             UIStage.setScene(itemSearchScene);
         });
