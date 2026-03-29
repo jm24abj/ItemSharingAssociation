@@ -119,47 +119,19 @@ public class DataLoader {
         try{
             PrintWriter writer = new PrintWriter(saveLocation);
             // need to have items that don't have a donor in the system at top
-            // then need member and all of their items donated underneath them
+            
             for (Item item : system.getItems()){
                 if (item.getDonator() == null){
-                    if(item instanceof DVD){
-                        DVD dvd = (DVD) item;
-                        String dvdData = "DVD"+"|"+dvd.getTitle()+"|"+dvd.getLanguage()
-                              +"|"+dvd.getDirector()+"|"+ String.join(",", dvd.getAudioLanguages());
-                        writer.println(dvdData);
-                      }
-                    else if (item instanceof Book){
-                        Book book = (Book) item;
-                        String bookData = "Book"+"|"+book.getTitle()+"|"+book.getAuthor()
-                                +"|"+book.getIsbn()+"|"+book.getLanguage();
-                        if (book.getLoanMember() != null){
-                            bookData +="|"+book.getLoanMember().getEmail();
-                        }
-                        writer.println(bookData);
-                    }
-                    
+                    writeItemData(writer, item);
                 }
             } 
+            // adds a member and all of their items donated underneath them
             for (Member member : allMembers){
                 writer.println("Member" + "|" + member.getName() + "|"+ member.getAddress()
                 + "|"+ member.getEmail()+"|"+member.getDonatedQty());
                 
                 for (Item donatorItem : member.getDonatedItems()){
-                    if(donatorItem instanceof DVD){
-                      DVD dvd = (DVD) donatorItem;
-                      String dvdData = "DVD"+"|"+dvd.getTitle()+"|"+dvd.getLanguage()
-                              +"|"+dvd.getDirector()+"|"+ String.join(",", dvd.getAudioLanguages());
-                      writer.println(dvdData);
-                      }
-                    else if (donatorItem instanceof Book){
-                        Book book = (Book) donatorItem;
-                        String bookData = "Book"+"|"+book.getTitle()+"|"+book.getAuthor()
-                                +"|"+book.getIsbn()+"|"+book.getLanguage();
-                        if (book.getLoanMember() != null){
-                            bookData +="|"+book.getLoanMember().getEmail();
-                        }
-                        writer.println(bookData);
-                    }
+                    writeItemData(writer,donatorItem);
                 }
             
             }
@@ -167,5 +139,24 @@ public class DataLoader {
         }catch (FileNotFoundException e) {
             System.out.println(e.toString());
         }
+    }
+    
+    // helper for writing to file
+    private static void writeItemData(PrintWriter writer, Item item){
+        if(item instanceof DVD){
+            DVD dvd = (DVD) item;
+            String dvdData = "DVD"+"|"+dvd.getTitle()+"|"+dvd.getLanguage()
+                +"|"+dvd.getDirector()+"|"+ String.join(",", dvd.getAudioLanguages());
+            writer.println(dvdData);
+            }
+            else if (item instanceof Book){
+                Book book = (Book) item;
+                String bookData = "Book"+"|"+book.getTitle()+"|"+book.getAuthor()
+                    +"|"+book.getIsbn()+"|"+book.getLanguage();
+                if (book.getLoanMember() != null){
+                    bookData +="|"+book.getLoanMember().getEmail();
+                }
+                writer.println(bookData);
+            }   
     }
 }
