@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.PrintWriter;
 
 // To add new data into the data file go to Other Sources/src/main/resources/input-1.dat
 
@@ -112,5 +113,16 @@ public class DataLoader {
                 return member;
         }
         return null;
+    }
+    public static void saveData(String fileName){
+        File saveLocation = new File("..\\ItemSharingAssociation\\src\\main\\resources\\"+fileName+".dat");
+        try{
+            PrintWriter writer = new PrintWriter(saveLocation);
+            // need to have items that don't have a donor in the system at top
+            // then need member and all of their items donated underneath them
+        
+        }catch (FileNotFoundException e) {
+            System.out.println(e.toString());
+        }
     }
 }
