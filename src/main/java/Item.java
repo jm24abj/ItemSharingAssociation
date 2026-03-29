@@ -13,7 +13,8 @@ public class Item {
     public Item(String title, String language, Member donatedBy) {
         this.title = title;
         this.language = language;
-        // donatedBy is String in constructor but Member field - convert/lookup as needed
+        this.donatedBy = donatedBy;
+        
     }
 
     public String getTitle() {

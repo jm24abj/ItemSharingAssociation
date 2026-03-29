@@ -120,7 +120,32 @@ public class DataLoader {
             PrintWriter writer = new PrintWriter(saveLocation);
             // need to have items that don't have a donor in the system at top
             // then need member and all of their items donated underneath them
-        
+            for (Item item : system.getItems()){
+                if (item.getDonator() == null){
+                    if(item instanceof DVD){
+                      DVD dvd = (DVD) item;
+                      String dvdData = "DVD"+"|"+dvd.getTitle()+"|"+dvd.getLanguage()
+                              +"|"+dvd.getDirector()+"|"+ String.join(",", dvd.getAudioLanguages());
+                      writer.println(dvdData);
+                      }
+                    else if (item instanceof Book){
+                        Book book = (Book) item;
+                        String bookData = "Book"+"|"+book.getTitle()+"|"+book.getAuthor()
+                                +"|"+book.getIsbn()+"|"+book.getLanguage();
+                        if (book.getLoanMember() != null){
+                            bookData +="|"+book.getLoanMember().getEmail();
+                        }
+                    }
+                    
+                }
+             
+            for (Member member : allMembers){
+                writer.println("Member" + "|" + member.getName() + "|"+ member.getAddress()
+                + "|"+ member.getEmail()+"|"+member.getDonatedQty());
+            
+            }
+                    
+            } 
         }catch (FileNotFoundException e) {
             System.out.println(e.toString());
         }
