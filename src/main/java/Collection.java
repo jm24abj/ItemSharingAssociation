@@ -11,11 +11,17 @@ public class Collection {
 
     public void addBook(String title, String author, Member donator, String language, String isbn) {
         Book book = new Book(title, author, donator, language, isbn);
+        if (donator != null) {
+            donator.addDonation(book);
+        }
         items.add(book);
     }
 
     public void addDVD(String title, String director, Member donator, String language, String[] audioLanguages) {
         DVD dvd = new DVD(title, director, donator, language, audioLanguages);
+        if (donator != null) {
+            donator.addDonation(dvd);
+        }
         items.add(dvd);
     }
 

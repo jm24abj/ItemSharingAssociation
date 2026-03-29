@@ -27,7 +27,7 @@ public class DataLoader {
                 String address = lineOfData[2];
                 String email = lineOfData[3];
                 int donatedQty = Integer.parseInt(lineOfData[4]);
-                Member newMember = new Member(name,address,email,donatedQty);
+                Member newMember = new Member(name,address,email,0);
                 allMembers.add(newMember);
             }
         }

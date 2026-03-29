@@ -1,4 +1,3 @@
-import java.awt.Paint;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -219,6 +218,11 @@ public class UIEngine extends Application {
         TextField languageField = new TextField();
         languageField.setPromptText("Language");
         
+        Button backButton = new Button("Return to Main Menu");
+        backButton.setOnAction((e) -> {
+            UIStage.setScene(mainMenuScene);
+        });
+        
         createButton.setOnAction((e) -> {
             if (itemType.getValue() == null) {
                 errorDisplay.setText("No Item Type Selected!");
@@ -227,8 +231,6 @@ public class UIEngine extends Application {
             } else if (!isInteger(isbnField.getText())){
                 errorDisplay.setText("ISBN Must Be A Number!");
             } else {
-                String type = itemType.getValue().toString();
-                String member = donatedBy.getValue().toString();
                 String title = titleField.getText();
                 String author = authorField.getText();
                 String isbn = isbnField.getText();
@@ -239,6 +241,7 @@ public class UIEngine extends Application {
         });
         
         bookMenu.getChildren().addAll(
+                backButton,
                 errorDisplay,
                 new Label("Item Type"), itemType,
                 new Label("Title"), titleField,
@@ -254,38 +257,43 @@ public class UIEngine extends Application {
         
     }
     
+    private void createAddDVDMenu(ComboBox itemType,ComboBox donatedBy,Button createButton) {
+       
+    }
+    
     private VBox createAddDVDMenu() {
         
         return new VBox(new Label("dvd"));
     }
     
     private void setupAddItemMenu(ArrayList<Member> members) {
+        
         VBox itemMenu = new VBox();
         Button submit = new Button("Submit");
         
         ComboBox itemType = new ComboBox();
-        itemType.getItems().addAll(
+        itemType.getItems().addAll( // contains all of the item types 
             "Book",
             "DVD"
         );
         
         ComboBox donatedBy = new ComboBox();
-        for (Member member : members) {
+        for (Member member : members) { // adds all members to the list of candidate donators
             donatedBy.getItems().add(member);
         }
-        
-        donatedBy.valueProperty().addListener(new ChangeListener<Member>() {
-            @Override
-            public void changed(ObservableValue ov,Member t,Member newSelection) {
-                System.out.println(newSelection.getName());
-            }
-        });
-        
+
         itemType.valueProperty().addListener(new ChangeListener<String>() {
+            // triggers on a new item type is selected in the drop down menu
+            // needs to do this as the different item types have different attributes ISBN etc...
             @Override
             public void changed(ObservableValue ov,String t,String newSelection) {
-                switch (newSelection) {
+                switch (newSelection) { // new selection contains string value of item type
+                    // calls the function that contains the way the actual UI is created depending on item type
+                    // If you wanted to be able to create new types of items you need to add a new 
+                    // value to the switch case and a new function to create UI with all of the fields 
+                    // like in the createAddBookMenu() and createAddDVDMenu() methods
                     case "Book":
+                        createAddBookMenu(itemType,donatedBy,submit);
                         break;
                     case "DVD":
                         break;
@@ -294,7 +302,7 @@ public class UIEngine extends Application {
         });
         
         itemType.setValue("Book");
-        createAddBookMenu(itemType,donatedBy,submit);
+        createAddBookMenu(itemType,donatedBy,submit); // sets up the ui initially with book selected
     }
     
     private VBox setupItemSearchMenu() {
