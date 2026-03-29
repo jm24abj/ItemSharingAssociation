@@ -62,7 +62,7 @@ public class DataLoader {
                     system.addBook(title, author, currentMember, language, isbn);
                 }
                 else{
-                    // item belonged to a departed member (won't be in the file)
+                    // item was donated by a departed member (won't be in the file)
                     system.addBook(title, author, null, language, isbn);
                 }
                 
@@ -141,7 +141,7 @@ public class DataLoader {
         }
     }
     
-    // helper for writing to file
+    // helper for writing items to file
     private static void writeItemData(PrintWriter writer, Item item){
         if(item instanceof DVD){
             DVD dvd = (DVD) item;
@@ -149,14 +149,14 @@ public class DataLoader {
                 +"|"+dvd.getDirector()+"|"+ String.join(",", dvd.getAudioLanguages());
             writer.println(dvdData);
             }
-            else if (item instanceof Book){
-                Book book = (Book) item;
-                String bookData = "Book"+"|"+book.getTitle()+"|"+book.getAuthor()
-                    +"|"+book.getIsbn()+"|"+book.getLanguage();
-                if (book.getLoanMember() != null){
-                    bookData +="|"+book.getLoanMember().getEmail();
-                }
-                writer.println(bookData);
+        else if (item instanceof Book){
+            Book book = (Book) item;
+            String bookData = "Book"+"|"+book.getTitle()+"|"+book.getAuthor()
+                +"|"+book.getIsbn()+"|"+book.getLanguage();
+            if (book.getLoanMember() != null){
+                bookData +="|"+book.getLoanMember().getEmail();
+            }
+            writer.println(bookData);
             }   
     }
 }
