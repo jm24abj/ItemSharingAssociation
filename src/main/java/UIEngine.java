@@ -27,6 +27,7 @@ public class UIEngine extends Application {
     private Scene addItemScene;
     private Scene addMemberScene;
     private Scene updateMemberScene;
+    private Scene updateItemScene;
     
     public boolean isInteger( String input ) {
     try {
@@ -88,8 +89,8 @@ public class UIEngine extends Application {
             createButton
         );
         
-        addMemberScene = new Scene(new StackPane(memberMenu), 640, 480);
-        UIStage.setScene(addMemberScene);
+        updateMemberScene = new Scene(new StackPane(memberMenu), 640, 480);
+        UIStage.setScene(updateMemberScene);
     }
     
     private Button setupUpdateMemberButton(Member member) {
@@ -103,9 +104,88 @@ public class UIEngine extends Application {
         return updateMemberButton;
     }
     
+    private void setupUpdateItemMenu(Item item) {
+        VBox itemMenu = new VBox();
+        
+        Label errorDisplay = new Label("");
+        Button createButton = new Button("Submit");
+        
+        TextField titleField = new TextField(item.getTitle());
+        titleField.setPromptText("Name");
+        TextField languageField = new TextField(item.getLanguage());
+        languageField.setPromptText("Address");
+        
+        itemMenu.getChildren().addAll(
+            errorDisplay,
+            new Label("Title"), titleField,
+            new Label("Language"), languageField
+        );
+        
+        if (item instanceof Book) {
+            Book bookItem = (Book) item;
+            TextField authorField = new TextField(bookItem.getAuthor());
+            authorField.setPromptText("Author");
+            TextField isbnField = new TextField(bookItem.getIsbn());
+            isbnField.setPromptText("ISBN");
+            itemMenu.getChildren().addAll(new Label("Author"),authorField,new Label("ISBN"),isbnField);
+            
+            createButton.setOnAction((e) -> {
+                if (titleField.getText() == "" || languageField.getText() == "" || authorField.getText() == "" || isbnField.getText() == "") {
+                    errorDisplay.setText("Must Fill All Fields!");
+                } else if (!isInteger(isbnField.getText())) {
+                    errorDisplay.setText("ISBN Must Be A Number!");
+                } else {
+                    bookItem.setIsbn(isbnField.getText());
+                    bookItem.setTitle(titleField.getText());
+                    bookItem.setAuthor(authorField.getText());
+                    bookItem.setLanguage(languageField.getText());
+                    itemDetailsScene = new Scene(new StackPane(getItemDetailsMenu(item)), 640, 480);
+                    UIStage.setScene(itemDetailsScene);
+                }
+            });
+        } else if (item instanceof DVD) {
+            DVD DVDItem = (DVD) item;
+            TextField directorField = new TextField(DVDItem.getDirector());
+            directorField.setPromptText("Director");
+            String defaultAudioString = "";
+            for (String audioLang : DVDItem.getAudioLanguages()) {
+                defaultAudioString+= audioLang + ",";
+            }
+            
+            TextField audioLanguagesField = new TextField(defaultAudioString);
+            audioLanguagesField.setPromptText("Audio Languages (Split by commas)");
+            itemMenu.getChildren().addAll(new Label("Author"),directorField,new Label("Audio Languages (Seperate via commas)"), audioLanguagesField);
+            
+            createButton.setOnAction((e) -> {
+                if (titleField.getText() == "" || languageField.getText() == "" || directorField.getText() == "" ) {
+                    errorDisplay.setText("Must Fill All Fields!");
+                } else {
+                    String[] newLanguageList = audioLanguagesField.getText().split(",");
+                    DVDItem.setAudioLanguages(newLanguageList);
+                    DVDItem.setTitle(titleField.getText());
+                    DVDItem.setDirector(directorField.getText());
+                    DVDItem.setLanguage(languageField.getText());
+                    itemDetailsScene = new Scene(new StackPane(getItemDetailsMenu(item)), 640, 480);
+                    UIStage.setScene(itemDetailsScene);
+                }
+            });
+        }
+        
+        itemMenu.getChildren().add(createButton);      
+        updateItemScene = new Scene(new StackPane(itemMenu), 640, 480);
+        UIStage.setScene(updateItemScene);
+    }
+    
+    
     private Button setupUpdateItemButton(Item item) {
         Button updateItemButton = new Button();
         updateItemButton.setText("Update Item");
+        
+        updateItemButton.setOnAction((e) -> {
+            setupUpdateItemMenu(item);
+        });
+        
+        
         return updateItemButton;
     }
     
