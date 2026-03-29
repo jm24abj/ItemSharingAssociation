@@ -26,6 +26,7 @@ public class UIEngine extends Application {
     private Scene mainMenuScene;
     private Scene addItemScene;
     private Scene addMemberScene;
+    private Scene updateMemberScene;
     
     public boolean isInteger( String input ) {
     try {
@@ -42,6 +43,9 @@ public class UIEngine extends Application {
         removeMemberButton.setText("Remove Member");
         
         removeMemberButton.setOnAction((e) -> {
+            for (Item item : member.getLoanItems()) {
+                item.returnLoan();
+            }
             DataLoader.allMembers.remove(member);
             memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(DataLoader.allMembers)), 640, 480);
             UIStage.setScene(memberSearchScene);
@@ -50,9 +54,52 @@ public class UIEngine extends Application {
         return removeMemberButton;
     }
     
+    private void setupUpdateMemberMenu(Member member) {
+        VBox memberMenu = new VBox();
+        Label errorDisplay = new Label("");
+        Button createButton = new Button("Submit");
+        TextField nameField = new TextField(member.getName());
+        nameField.setPromptText("Name");
+        TextField addressField = new TextField(member.getAddress());
+        addressField.setPromptText("Address");
+        TextField emailField = new TextField(member.getEmail());
+        emailField.setPromptText("Email");
+        
+        createButton.setOnAction((e) -> {
+            if (nameField.getText() == "" || addressField.getText() == "" || emailField.getText() == "") {
+                errorDisplay.setText("Must Fill All Fields!");
+            } else {
+                String name = nameField.getText();
+                String address = addressField.getText();
+                String email = emailField.getText();
+                member.setName(name);
+                member.setAddress(address);
+                member.setEmail(email);
+                memberDetailsScene = new Scene(new StackPane(getMemberDetailsMenu(member)), 640, 480);
+                UIStage.setScene(memberDetailsScene);
+            }
+        });
+        
+        memberMenu.getChildren().addAll(
+            errorDisplay,
+            new Label("Name"), nameField,
+            new Label("Address"), addressField,
+            new Label("Email"),emailField,
+            createButton
+        );
+        
+        addMemberScene = new Scene(new StackPane(memberMenu), 640, 480);
+        UIStage.setScene(addMemberScene);
+    }
+    
     private Button setupUpdateMemberButton(Member member) {
         Button updateMemberButton = new Button();
         updateMemberButton.setText("Update Member");
+        
+        updateMemberButton.setOnAction((e) -> {
+            setupUpdateMemberMenu(member);
+        });
+        
         return updateMemberButton;
     }
     

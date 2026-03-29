@@ -4,7 +4,6 @@
  *
  * @author guney
  */
-import java.util.ArrayList;
 
 public class Book extends Item {
 
