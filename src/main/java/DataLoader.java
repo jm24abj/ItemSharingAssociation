@@ -9,10 +9,9 @@ import java.util.Scanner;
 public class DataLoader {
     
     public static Collection system  = new Collection(); // contains every item in our project (books, dvds etc..)
+    public static ArrayList<Member> allMembers = new ArrayList<Member> ();
     
-    public static ArrayList<Member> loadData() {
-        
-        ArrayList<Member> allMembers = new ArrayList<Member>();
+    public static void loadData() {
         
         File dataFile = new File("..\\ItemSharingAssociation\\src\\main\\resources\\input-1.dat");
         
@@ -27,7 +26,7 @@ public class DataLoader {
                 String address = lineOfData[2];
                 String email = lineOfData[3];
                 int donatedQty = Integer.parseInt(lineOfData[4]);
-                Member newMember = new Member(name,address,email,0);
+                Member newMember = new Member(name,address,email,donatedQty);
                 allMembers.add(newMember);
             }
         }
@@ -71,6 +70,7 @@ public class DataLoader {
                    Member borrower = searchForMember(borrowerEmail,allMembers);
                    if (borrower != null){
                        book.loanTo(borrower);
+                       borrower.decreaseBorrowingQty(1);
                    }
                 }
             }
@@ -96,6 +96,7 @@ public class DataLoader {
                         Member borrower = searchForMember(borrowerEmail,allMembers);
                         if (borrower != null){
                            dvd.loanTo(borrower);
+                           borrower.decreaseBorrowingQty(1);
                        }
                     }
             }
@@ -104,7 +105,6 @@ public class DataLoader {
         } catch (FileNotFoundException e){
            System.out.println(e.toString());
         }
-        return allMembers;
     }
     public static Member searchForMember(String email, ArrayList<Member> allMembers){
         for(Member member: allMembers){

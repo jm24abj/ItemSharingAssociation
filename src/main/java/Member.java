@@ -65,6 +65,10 @@ public class Member {
         return borrowing.size();
     }
     
+    public void decreaseBorrowingQty(int amount) { // used duing file loading to make sure qty is correct
+        donatedQty = Math.max(0,donatedQty - amount);
+    }
+    
     public void addDonation(Item item) {
         donatedItems.add(item);
         donatedQty++;
@@ -72,6 +76,7 @@ public class Member {
 
     public boolean lend(Item item) {
         if (borrowing.size() >= donatedQty) {
+            System.out.println("cant borrow");
             return false;
         }
         borrowing.add(item);

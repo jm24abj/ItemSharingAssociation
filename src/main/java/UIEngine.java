@@ -25,6 +25,7 @@ public class UIEngine extends Application {
     private Scene memberDetailsScene;
     private Scene mainMenuScene;
     private Scene addItemScene;
+    private Scene addMemberScene;
     
     public boolean isInteger( String input ) {
     try {
@@ -36,20 +37,20 @@ public class UIEngine extends Application {
     }
 }
     
-    private Button setupRemoveMemberButton(ArrayList<Member> allMembers, Member member) {
+    private Button setupRemoveMemberButton(Member member) {
         Button removeMemberButton = new Button();
         removeMemberButton.setText("Remove Member");
         
         removeMemberButton.setOnAction((e) -> {
-            allMembers.remove(member);
-            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(allMembers)), 640, 480);
+            DataLoader.allMembers.remove(member);
+            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(DataLoader.allMembers)), 640, 480);
             UIStage.setScene(memberSearchScene);
         });
         
         return removeMemberButton;
     }
     
-    private Button setupUpdateMemberButton(ArrayList<Member> allMembers, Member member) {
+    private Button setupUpdateMemberButton(Member member) {
         Button updateMemberButton = new Button();
         updateMemberButton.setText("Update Member");
         return updateMemberButton;
@@ -85,6 +86,7 @@ public class UIEngine extends Application {
         returnItemButton.setText("Return Item");
         
         returnItemButton.setOnAction((e) -> {
+            item.getLoanMember().returnItem(item);
             item.returnLoan();
             itemDetailsScene = new Scene(new StackPane(getItemDetailsMenu(item)), 640, 480);
             UIStage.setScene(itemDetailsScene);
@@ -93,7 +95,7 @@ public class UIEngine extends Application {
         return returnItemButton;
     }
     
-    private VBox getMemberDetailsMenu(ArrayList<Member> allMembers,Member member) {
+    private VBox getMemberDetailsMenu(Member member) {
         Button backItemButton = new Button();
         backItemButton.setText("Return to menu");
         backItemButton.setOnAction((e)->{
@@ -108,8 +110,8 @@ public class UIEngine extends Application {
             new Label("Numer of Items Borrowing : " + Integer.toString(member.borrowingQty())),
             new Label("Borrowing : " + member.getBorrowingItems()),
             backItemButton,
-            setupRemoveMemberButton(allMembers,member),
-            setupUpdateMemberButton(allMembers,member)
+            setupRemoveMemberButton(member),
+            setupUpdateMemberButton(member)
         );
         return buttonHolder;
     }
@@ -196,7 +198,7 @@ public class UIEngine extends Application {
             resultButton.setPrefWidth(Double.MAX_VALUE);
             
             resultButton.setOnAction((e) -> {
-                memberDetailsScene = new Scene(new StackPane(getMemberDetailsMenu(members,member)), 640, 480);
+                memberDetailsScene = new Scene(new StackPane(getMemberDetailsMenu(member)), 640, 480);
                 UIStage.setScene(memberDetailsScene);
             });
             
@@ -212,6 +214,50 @@ public class UIEngine extends Application {
             }
         }
         return audioLanguages.toArray(new String[audioLanguages.size()]);
+    }
+    
+    private void createAddMemberMenu() {
+        VBox memberMenu = new VBox();
+        Button createButton = new Button("Submit");
+        
+        Label errorDisplay = new Label ("");
+        errorDisplay.setTextFill(Color.RED);
+        
+        TextField nameField = new TextField();
+        nameField.setPromptText("Name");
+        TextField addressField = new TextField();
+        addressField.setPromptText("Address");
+        TextField emailField = new TextField();
+        emailField.setPromptText("Email");
+
+        Button backButton = new Button("Return to Main Menu");
+        backButton.setOnAction((e) -> {
+            UIStage.setScene(mainMenuScene);
+        });
+        
+        createButton.setOnAction((e) -> {
+            if (nameField.getText() == "" || addressField.getText() == "" || emailField.getText() == "") {
+                errorDisplay.setText("Must Fill All Fields!");
+            } else {
+                String name = nameField.getText();
+                String address = addressField.getText();
+                String email = emailField.getText();
+                DataLoader.allMembers.add(new Member(name,address,email,0));
+                UIStage.setScene(mainMenuScene);
+            }
+        });
+        
+        memberMenu.getChildren().addAll(
+                backButton,
+                errorDisplay,
+                new Label("Name"), nameField,
+                new Label("Address"), addressField,
+                new Label("Email"),emailField,
+                createButton
+        );
+        
+        addMemberScene = new Scene(new StackPane(memberMenu), 640, 480);
+        UIStage.setScene(addMemberScene);
     }
     
     private void createAddDVDMenu(ComboBox itemType,ComboBox donatedBy,Button createButton) {
@@ -306,6 +352,8 @@ public class UIEngine extends Application {
                 errorDisplay.setText("No Donator Selected!");
             } else if (!isInteger(isbnField.getText())){
                 errorDisplay.setText("ISBN Must Be A Number!");
+            } else if (titleField.getText() == "" || authorField.getText() == "" || languageField.getText() == "") {
+                errorDisplay.setText("Must Fill All Fields!");
             } else {
                 String title = titleField.getText();
                 String author = authorField.getText();
@@ -333,7 +381,7 @@ public class UIEngine extends Application {
         
     }
     
-    private void setupAddItemMenu(ArrayList<Member> members) {
+    private void setupAddItemMenu() {
         
         VBox itemMenu = new VBox();
         Button submit = new Button("Submit");
@@ -345,7 +393,7 @@ public class UIEngine extends Application {
         );
         
         ComboBox donatedBy = new ComboBox();
-        for (Member member : members) { // adds all members to the list of candidate donators
+        for (Member member : DataLoader.allMembers) { // adds all members to the list of candidate donators
             donatedBy.getItems().add(member);
         }
 
@@ -431,7 +479,7 @@ public class UIEngine extends Application {
         return new VBox(returnButton,searchArea,searchResultsArea);
     }
     
-    public StackPane setupMainMenu(ArrayList<Member> members) {
+    public StackPane setupMainMenu() {
         Button searchItemsButton = new Button("Search Items");
         Button searchMembersButton = new Button("Search Members");
         Button addMemberButton = new Button("Add Member");
@@ -444,16 +492,16 @@ public class UIEngine extends Application {
         });
         
         searchMembersButton.setOnAction((e) -> {
-            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(members)), 640, 480);
+            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(DataLoader.allMembers)), 640, 480);
             UIStage.setScene(memberSearchScene);
         });
         
         addMemberButton.setOnAction((e) -> {
-            
+            createAddMemberMenu();
         });
         
         addItemButton.setOnAction((e) -> {
-            setupAddItemMenu(members);
+            setupAddItemMenu();
         });
         
         saveDataButton.setOnAction((e) -> {
@@ -470,10 +518,10 @@ public class UIEngine extends Application {
         
         // SETUP MISC
         UIStage = stage;
-        ArrayList<Member> members = DataLoader.loadData(); // gets a list of the members from the DataLoader.java file
+        DataLoader.loadData(); // gets a list of the members from the DataLoader.java file
         
         //SETUP AND LODING MAIN MENU
-        mainMenuScene = new Scene(setupMainMenu(members), 640, 480);
+        mainMenuScene = new Scene(setupMainMenu(), 640, 480);
         UIStage.setScene(mainMenuScene);
         UIStage.show();
     }
