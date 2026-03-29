@@ -28,6 +28,7 @@ public class UIEngine extends Application {
     private Scene addMemberScene;
     private Scene updateMemberScene;
     private Scene updateItemScene;
+    private Scene lendItemScene;
     
     public boolean isInteger( String input ) {
     try {
@@ -108,6 +109,7 @@ public class UIEngine extends Application {
         VBox itemMenu = new VBox();
         
         Label errorDisplay = new Label("");
+        errorDisplay.setTextFill(Color.RED);
         Button createButton = new Button("Submit");
         
         TextField titleField = new TextField(item.getTitle());
@@ -132,8 +134,6 @@ public class UIEngine extends Application {
             createButton.setOnAction((e) -> {
                 if (titleField.getText() == "" || languageField.getText() == "" || authorField.getText() == "" || isbnField.getText() == "") {
                     errorDisplay.setText("Must Fill All Fields!");
-                } else if (!isInteger(isbnField.getText())) {
-                    errorDisplay.setText("ISBN Must Be A Number!");
                 } else {
                     bookItem.setIsbn(isbnField.getText());
                     bookItem.setTitle(titleField.getText());
@@ -206,9 +206,43 @@ public class UIEngine extends Application {
         return removeItemButton;
     }
     
+    private void setupLendItemMenu(Item item) {
+        VBox lendItemsMenu = new VBox();
+        Button cancelButton = new Button("Cancel");
+        Button confirmButton = new Button("Confirm");
+        
+        ComboBox candidateLenders = new ComboBox();
+        for (Member member : DataLoader.allMembers) { // adds all members to the list of candidate donators
+            candidateLenders.getItems().add(member);
+        }
+        
+        cancelButton.setOnAction((e) -> {
+            itemDetailsScene = new Scene(new StackPane(getItemDetailsMenu(item)), 640, 480);
+            UIStage.setScene(itemDetailsScene);
+        });
+        
+        confirmButton.setOnAction((e) -> {
+            if (candidateLenders.getValue() != null) {
+                Member memberToLend = (Member) candidateLenders.getValue();
+                item.loanTo(memberToLend);
+                itemDetailsScene = new Scene(new StackPane(getItemDetailsMenu(item)), 640, 480);
+                UIStage.setScene(itemDetailsScene);
+            }
+        });
+        
+        lendItemsMenu.getChildren().addAll(new Label("Member To Lend"),candidateLenders,cancelButton,confirmButton);
+        lendItemScene = new Scene(new StackPane(lendItemsMenu), 640, 480);
+        UIStage.setScene(lendItemScene);
+    }
+    
     private Button setupLendItemButton(Item item) {
         Button lendItemButton = new Button();
         lendItemButton.setText("Lend Item");
+        
+        lendItemButton.setOnAction((e) -> {
+            setupLendItemMenu(item);
+        });
+        
         return lendItemButton;
     }
     

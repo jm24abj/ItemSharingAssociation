@@ -33,8 +33,9 @@ public class Item {
     }
 
     public void loanTo(Member borrower) {
-        borrower.lend(this);
-        this.onLoanTo = borrower;
+        if (borrower.lend(this)) {
+            this.onLoanTo = borrower;
+        }
     }
     
     public Member getLoanMember() {
