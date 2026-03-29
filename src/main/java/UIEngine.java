@@ -1,12 +1,17 @@
+import java.awt.Paint;
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class UIEngine extends Application {
@@ -19,12 +24,17 @@ public class UIEngine extends Application {
     private Scene itemDetailsScene;
     private Scene memberDetailsScene;
     private Scene mainMenuScene;
+    private Scene addItemScene;
     
-    private Button setupUpdateMemberButton(ArrayList<Member> allMembers, Member member) {
-        Button updateMemberButton = new Button();
-        updateMemberButton.setText("Update Member");
-        return updateMemberButton;
+    public boolean isInteger( String input ) {
+    try {
+        Integer.parseInt( input );
+        return true;
     }
+    catch( Exception e ) {
+        return false;
+    }
+}
     
     private Button setupRemoveMemberButton(ArrayList<Member> allMembers, Member member) {
         Button removeMemberButton = new Button();
@@ -37,6 +47,12 @@ public class UIEngine extends Application {
         });
         
         return removeMemberButton;
+    }
+    
+    private Button setupUpdateMemberButton(ArrayList<Member> allMembers, Member member) {
+        Button updateMemberButton = new Button();
+        updateMemberButton.setText("Update Member");
+        return updateMemberButton;
     }
     
     private Button setupUpdateItemButton(Item item) {
@@ -90,7 +106,7 @@ public class UIEngine extends Application {
             new Label("Email : " + member.getEmail()),
             new Label("Number of Items Donated : " + Integer.toString(member.getDonatedQty())),
             new Label("Numer of Items Borrowing : " + Integer.toString(member.borrowingQty())),
-            new Label("Borrowing : " + member.toString()),
+            new Label("Borrowing : " + member.getBorrowingItems()),
             backItemButton,
             setupRemoveMemberButton(allMembers,member),
             setupUpdateMemberButton(allMembers,member)
@@ -188,6 +204,99 @@ public class UIEngine extends Application {
         }
     }
     
+    private void createAddBookMenu(ComboBox itemType,ComboBox donatedBy,Button createButton) {
+        VBox bookMenu = new VBox();
+        
+        Label errorDisplay = new Label ("");
+        errorDisplay.setTextFill(Color.RED);
+        
+        TextField titleField = new TextField();
+        titleField.setPromptText("Title");
+        TextField authorField = new TextField();
+        authorField.setPromptText("Author");
+        TextField isbnField = new TextField();
+        isbnField.setPromptText("ISBN");
+        TextField languageField = new TextField();
+        languageField.setPromptText("Language");
+        
+        createButton.setOnAction((e) -> {
+            if (itemType.getValue() == null) {
+                errorDisplay.setText("No Item Type Selected!");
+            } else if (donatedBy.getValue() == null){
+                errorDisplay.setText("No Donator Selected!");
+            } else if (!isInteger(isbnField.getText())){
+                errorDisplay.setText("ISBN Must Be A Number!");
+            } else {
+                String type = itemType.getValue().toString();
+                String member = donatedBy.getValue().toString();
+                String title = titleField.getText();
+                String author = authorField.getText();
+                String isbn = isbnField.getText();
+                String language = languageField.getText();
+                DataLoader.system.addBook(title, author, (Member) donatedBy.getValue(), language, isbn);
+                UIStage.setScene(mainMenuScene);
+            }
+        });
+        
+        bookMenu.getChildren().addAll(
+                errorDisplay,
+                new Label("Item Type"), itemType,
+                new Label("Title"), titleField,
+                new Label("Author"),authorField,
+                new Label("ISBN"), isbnField,
+                new Label("Language"), languageField,
+                new Label ("Donated By"), donatedBy,
+                createButton
+        );
+        
+        addItemScene = new Scene(new StackPane(bookMenu), 640, 480);
+        UIStage.setScene(addItemScene);
+        
+    }
+    
+    private VBox createAddDVDMenu() {
+        
+        return new VBox(new Label("dvd"));
+    }
+    
+    private void setupAddItemMenu(ArrayList<Member> members) {
+        VBox itemMenu = new VBox();
+        Button submit = new Button("Submit");
+        
+        ComboBox itemType = new ComboBox();
+        itemType.getItems().addAll(
+            "Book",
+            "DVD"
+        );
+        
+        ComboBox donatedBy = new ComboBox();
+        for (Member member : members) {
+            donatedBy.getItems().add(member);
+        }
+        
+        donatedBy.valueProperty().addListener(new ChangeListener<Member>() {
+            @Override
+            public void changed(ObservableValue ov,Member t,Member newSelection) {
+                System.out.println(newSelection.getName());
+            }
+        });
+        
+        itemType.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue ov,String t,String newSelection) {
+                switch (newSelection) {
+                    case "Book":
+                        break;
+                    case "DVD":
+                        break;
+                }
+            }
+        });
+        
+        itemType.setValue("Book");
+        createAddBookMenu(itemType,donatedBy,submit);
+    }
+    
     private VBox setupItemSearchMenu() {
 
         
@@ -249,8 +358,9 @@ public class UIEngine extends Application {
     public StackPane setupMainMenu(ArrayList<Member> members) {
         Button searchItemsButton = new Button("Search Items");
         Button searchMembersButton = new Button("Search Members");
-        Button addMemberButton = new Button("Add Item");
-        Button addItemButton = new Button("Add Member");
+        Button addMemberButton = new Button("Add Member");
+        Button addItemButton = new Button("Add Item");
+        Button saveDataButton = new Button("Save Data");
         
         searchItemsButton.setOnAction((e) -> {
             itemSearchScene = new Scene(new StackPane(setupItemSearchMenu()), 640, 480);
@@ -267,10 +377,14 @@ public class UIEngine extends Application {
         });
         
         addItemButton.setOnAction((e) -> {
+            setupAddItemMenu(members);
+        });
+        
+        saveDataButton.setOnAction((e) -> {
             
         });
         
-        VBox vbox = new VBox(searchItemsButton,searchMembersButton,addMemberButton,addItemButton);
+        VBox vbox = new VBox(searchItemsButton,searchMembersButton,addMemberButton,addItemButton,saveDataButton);
         StackPane scene = new StackPane(vbox);
         return scene;
     }

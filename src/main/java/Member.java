@@ -81,13 +81,17 @@ public class Member {
     public void returnItem(Item item) {
         borrowing.remove(item);
     }
-
-    @Override
-    public String toString() { // returns a list of all the items theyre borrowing for the UI 
+    
+    public String getBorrowingItems() {
         String borrowingItemsString = "";
         for (Item item : getLoanItems()) {
             borrowingItemsString += item.getTitle() + " | ";
         } 
         return borrowingItemsString;
+    }
+
+    @Override
+    public String toString() { // returns a list of all the items theyre borrowing for the UI 
+        return getName();
     }
 }
