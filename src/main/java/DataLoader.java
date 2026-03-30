@@ -60,6 +60,7 @@ public class DataLoader {
               
                 if (currentMember != null){
                     system.addBook(title, author, currentMember, language, isbn);
+                    currentMember.decreaseBorrowingQty(1);
                 }
                 else{
                     // item was donated by a departed member (won't be in the file)
@@ -71,7 +72,6 @@ public class DataLoader {
                    Member borrower = searchForMember(borrowerEmail,allMembers);
                    if (borrower != null){
                        book.loanTo(borrower);
-                       borrower.decreaseBorrowingQty(1);
                    }
                 }
             }
@@ -88,6 +88,7 @@ public class DataLoader {
                 
                 if (currentMember != null){
                     system.addDVD(title, director, currentMember, language, audioLanguages);
+                    currentMember.decreaseBorrowingQty(1);
                 }
                 else{
                     system.addDVD(title, director, null, language, audioLanguages);
@@ -97,7 +98,6 @@ public class DataLoader {
                         Member borrower = searchForMember(borrowerEmail,allMembers);
                         if (borrower != null){
                            dvd.loanTo(borrower);
-                           borrower.decreaseBorrowingQty(1);
                        }
                     }
             }

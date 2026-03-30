@@ -208,6 +208,8 @@ public class UIEngine extends Application {
     
     private void setupLendItemMenu(Item item) {
         VBox lendItemsMenu = new VBox();
+        Label errorDisplay = new Label();
+        errorDisplay.setTextFill(Color.RED);
         Button cancelButton = new Button("Cancel");
         Button confirmButton = new Button("Confirm");
         
@@ -222,15 +224,22 @@ public class UIEngine extends Application {
         });
         
         confirmButton.setOnAction((e) -> {
-            if (candidateLenders.getValue() != null) {
+            if (candidateLenders.getValue() == null) {
+                errorDisplay.setText("Must Select A Member!");
+            } else {
+                errorDisplay.setText("");
                 Member memberToLend = (Member) candidateLenders.getValue();
-                item.loanTo(memberToLend);
-                itemDetailsScene = new Scene(new StackPane(getItemDetailsMenu(item)), 640, 480);
-                UIStage.setScene(itemDetailsScene);
+                if (memberToLend.canBorrow()) {
+                    item.loanTo(memberToLend);
+                    itemDetailsScene = new Scene(new StackPane(getItemDetailsMenu(item)), 640, 480);
+                    UIStage.setScene(itemDetailsScene);
+                } else {
+                    errorDisplay.setText("Member cannot borrow more than then the amount donated up to 5 maximum books");
+                }
             }
         });
         
-        lendItemsMenu.getChildren().addAll(new Label("Member To Lend"),candidateLenders,cancelButton,confirmButton);
+        lendItemsMenu.getChildren().addAll(errorDisplay,new Label("Member To Lend"),candidateLenders,cancelButton,confirmButton);
         lendItemScene = new Scene(new StackPane(lendItemsMenu), 640, 480);
         UIStage.setScene(lendItemScene);
     }
@@ -300,7 +309,7 @@ public class UIEngine extends Application {
         );
         
         if (item.getDonator() != null) {
-            buttonHolder.getChildren().add(new Label(item.getDonator().getName()));
+            buttonHolder.getChildren().add(new Label("Donated by: " + item.getDonator().getName()));
         }
         
         if (item instanceof Book) {

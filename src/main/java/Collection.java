@@ -13,6 +13,7 @@ public class Collection {
         Book book = new Book(title, author, donator, language, isbn);
         if (donator != null) {
             donator.addDonation(book);
+            System.out.println(donator.getName() + " donated " + book.getTitle());
         }
         items.add(book);
     }
@@ -21,6 +22,7 @@ public class Collection {
         DVD dvd = new DVD(title, director, donator, language, audioLanguages);
         if (donator != null) {
             donator.addDonation(dvd);
+            System.out.println(donator.getName() + " donated " + dvd.getTitle());
         }
         items.add(dvd);
     }

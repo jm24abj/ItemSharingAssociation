@@ -73,9 +73,13 @@ public class Member {
         donatedItems.add(item);
         donatedQty++;
     }
+    
+    public boolean canBorrow() {
+        return borrowing.size() < Math.min(5, donatedQty);
+    }
 
     public boolean lend(Item item) {
-        if (borrowing.size() >= donatedQty) {
+        if (!canBorrow()) {
             System.out.println("cant borrow");
             return false;
         }
