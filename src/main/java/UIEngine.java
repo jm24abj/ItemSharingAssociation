@@ -45,9 +45,7 @@ public class UIEngine extends Application {
         removeMemberButton.setText("Remove Member");
         
         removeMemberButton.setOnAction((e) -> {
-            for (Item item : member.getLoanItems()) {
-                item.returnLoan();
-            }
+            member.clearUserData();
             DataLoader.allMembers.remove(member);
             memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(DataLoader.allMembers)), 640, 480);
             UIStage.setScene(memberSearchScene);

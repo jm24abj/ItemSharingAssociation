@@ -91,6 +91,16 @@ public class Member {
         borrowing.remove(item);
     }
     
+    public void clearUserData() {
+        for (Item item : donatedItems) {
+            item.clearDonator();
+        }
+        
+        for (Item item : borrowing) {
+            item.returnLoan();
+        }
+    }
+    
     public String getBorrowingItems() {
         String borrowingItemsString = "";
         for (Item item : getLoanItems()) {
