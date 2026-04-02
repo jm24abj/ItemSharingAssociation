@@ -159,4 +159,10 @@ public class DataLoader {
             writer.println(bookData);
             }   
     }
+    
+    // Method for JUnit Testing
+    public static void resetFieldsForTest(){
+        system = new Collection();
+        allMembers = new ArrayList<Member>();
+    }
 }

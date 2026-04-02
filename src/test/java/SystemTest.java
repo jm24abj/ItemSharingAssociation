@@ -8,17 +8,32 @@
  * @author j
  */
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SystemTest {
     
+    @BeforeEach
+    public void setup(){
+        DataLoader.resetFieldsForTest();
+    }   
     @Test
-    public void searchItems(){
-    // TODO
-    // tests searching function
-    
+    public void searchForItem(){
+
+    // tests item searching method in collection
+    DataLoader.loadData();
+    Item item = DataLoader.system.getItem("The Shining");
+    assertEquals("The Shining",item.getTitle());
     }
     
+    @Test
+    public void searchItemDonator(){
+    DataLoader.loadData();
+    Item item1 = DataLoader.system.getItem("The Shining");
+    assertNull(item1.getDonator());
+    
+    Item item2 = DataLoader.system.getItem("Война и миръ");
+    assertEquals("Andrey Bolotov",item2.getDonator());
+    }
     // TODO - other tests
 }
