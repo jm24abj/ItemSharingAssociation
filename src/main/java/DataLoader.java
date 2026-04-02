@@ -49,7 +49,7 @@ public class DataLoader {
                 
                 String email = lineOfData[3];
                 
-                currentMember = searchForMember(email,allMembers);
+                currentMember = searchForMember(email);
             }
             else if(lineOfData[0].equals("Book")){
                 String title = lineOfData[1];
@@ -69,7 +69,7 @@ public class DataLoader {
                 
                 if (borrowerEmail != null){
                    Item book = system.getItem(title);
-                   Member borrower = searchForMember(borrowerEmail,allMembers);
+                   Member borrower = searchForMember(borrowerEmail);
                    if (borrower != null){
                        book.loanTo(borrower);
                    }
@@ -95,7 +95,7 @@ public class DataLoader {
                 }
                     if (borrowerEmail != null){
                         Item dvd = system.getItem(title);
-                        Member borrower = searchForMember(borrowerEmail,allMembers);
+                        Member borrower = searchForMember(borrowerEmail);
                         if (borrower != null){
                            dvd.loanTo(borrower);
                        }
@@ -107,9 +107,10 @@ public class DataLoader {
            System.out.println(e.toString());
         }
     }
-    public static Member searchForMember(String email, ArrayList<Member> allMembers){
+    
+    public static Member searchForMember(String email){
         for(Member member: allMembers){
-            if (member.getEmail().equals(email))
+            if (member.getEmail().equalsIgnoreCase(email))
                 return member;
         }
         return null;
