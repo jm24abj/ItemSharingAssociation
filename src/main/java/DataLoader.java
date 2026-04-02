@@ -107,7 +107,8 @@ public class DataLoader {
            System.out.println(e.toString());
         }
     }
-    
+    // used to convert data file emails to members
+    // this is public because this method is used in the JUnit tests
     public static Member searchForMember(String email){
         for(Member member: allMembers){
             if (member.getEmail().equalsIgnoreCase(email))

@@ -20,7 +20,7 @@ public class SystemTest {
     }   
     @Test
     public void searchItem(){
-
+        
     // tests item searching method in collection
     Item item = DataLoader.system.getItem("The Shining");
     assertEquals("The Shining",item.getTitle());
@@ -87,5 +87,33 @@ public class SystemTest {
     assertNotEquals(oldDirector,newDirector);
     }
     
-    // TODO - maybe a few more related to file handling
+    @Test
+    public void checkIsbn(){
+        Book targetBook = (Book) DataLoader.system.getItem("The Shining");
+        assertEquals("9780345806789",targetBook.getIsbn());
+    }
+    
+    @Test
+    public void changeIsbn(){
+       Book targetBook = (Book) DataLoader.system.getItem("The Shining");
+       String originalIsbn = targetBook.getIsbn();
+       targetBook.setIsbn("235435345345");
+       assertNotEquals(originalIsbn,targetBook.getIsbn());
+    }
+    @Test
+    public void setLoan(){
+        Book targetBook = (Book) DataLoader.system.getItem("Le Symbole Perdu");
+        Member borrower = DataLoader.searchForMember("a.smith@yahoo.com");
+        int oldNumberOfLoans = borrower.getLoanItems().size();
+        targetBook.loanTo(borrower);
+        assertNotEquals(oldNumberOfLoans, borrower.getLoanItems().size());
+        assertEquals(borrower, targetBook.getLoanMember());
+    }
+    
+    @Test
+    public void clearDonator(){
+        Book targetBook = (Book) DataLoader.system.getItem("Le Symbole Perdu");
+        targetBook.clearDonator();
+        assertNull(targetBook.getDonator());
+    }
 }
