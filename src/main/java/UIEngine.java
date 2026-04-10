@@ -677,7 +677,7 @@ public class UIEngine extends Application {
         });
         
         saveDataButton.setOnAction((e) -> {
-            
+            DataLoader.saveData("input-1");
         });
         
         VBox vbox = new VBox(searchItemsButton,searchMembersButton,addMemberButton,addItemButton,saveDataButton);
