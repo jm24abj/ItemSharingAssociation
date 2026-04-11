@@ -9,6 +9,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -656,7 +657,11 @@ public class UIEngine extends Application {
         Button searchMembersButton = new Button("Search Members");
         Button addMemberButton = new Button("Add Member");
         Button addItemButton = new Button("Add Item");
+        
         Button saveDataButton = new Button("Save Data");
+        TextField filenameField = new TextField();
+        filenameField.setPromptText("File Name");
+        HBox saveholder = new HBox(filenameField,saveDataButton);
         
         searchItemsButton.setOnAction((e) -> {
             itemSearchScene = new Scene(new StackPane(setupItemSearchMenu()), 640, 480);
@@ -677,10 +682,10 @@ public class UIEngine extends Application {
         });
         
         saveDataButton.setOnAction((e) -> {
-            DataLoader.saveData("input-1");
+            DataLoader.saveData(filenameField.getText());
         });
         
-        VBox vbox = new VBox(searchItemsButton,searchMembersButton,addMemberButton,addItemButton,saveDataButton);
+        VBox vbox = new VBox(searchItemsButton,searchMembersButton,addMemberButton,addItemButton,saveholder);
         StackPane scene = new StackPane(vbox);
         return scene;
     }
