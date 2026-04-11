@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.PrintWriter;
 
-// To add new data into the data file go to Other Sources/src/main/resources/input-1.dat
+// To find the data file go to Other Sources/src/main/resources/input-1.dat
 
 public class DataLoader {
     
@@ -82,7 +82,7 @@ public class DataLoader {
                 String[] audioLanguages = lineOfData[4].split(",");
                 String borrowerEmail = (lineOfData.length > 5 && !lineOfData[5].isEmpty()) ? lineOfData[5] : null;
                 
-                // to fix white spaces in file
+                // gets rid of whitespace before being added to the array
                 for (int i = 0; i < audioLanguages.length; i++)
                     audioLanguages[i] = audioLanguages[i].trim();
                 
@@ -138,7 +138,7 @@ public class DataLoader {
             
             }
             writer.close();
-        }catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println(e.toString());
         }
     }
@@ -148,15 +148,18 @@ public class DataLoader {
         if(item instanceof DVD){
             DVD dvd = (DVD) item;
             String dvdData = "DVD"+"|"+dvd.getTitle()+"|"+dvd.getLanguage()
-                +"|"+dvd.getDirector()+"|"+ String.join(",", dvd.getAudioLanguages());
+                +"|"+dvd.getDirector()+"|"+ String.join(", ",dvd.getAudioLanguages())+"|";
+            if (dvd.getLoanMember()!= null){
+                dvdData +=dvd.getLoanMember().getEmail();
+            }
             writer.println(dvdData);
             }
         else if (item instanceof Book){
             Book book = (Book) item;
             String bookData = "Book"+"|"+book.getTitle()+"|"+book.getAuthor()
-                +"|"+book.getIsbn()+"|"+book.getLanguage();
+                +"|"+book.getIsbn()+"|"+book.getLanguage()+"|";
             if (book.getLoanMember() != null){
-                bookData +="|"+book.getLoanMember().getEmail();
+                bookData +=book.getLoanMember().getEmail();
             }
             writer.println(bookData);
             }   
