@@ -47,8 +47,8 @@ public class UIEngine extends Application {
         
         removeMemberButton.setOnAction((e) -> {
             member.clearUserData();
-            DataLoader.allMembers.remove(member);
-            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(DataLoader.allMembers)), 640, 480);
+            DataHandler.allMembers.remove(member);
+            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(DataHandler.allMembers)), 640, 480);
             UIStage.setScene(memberSearchScene);
         });
         
@@ -196,7 +196,7 @@ public class UIEngine extends Application {
             if (item.getLoanMember() != null) {
                 item.getLoanMember().returnItem(item);
             }
-            DataLoader.system.removeItem(item);
+            DataHandler.system.removeItem(item);
             
             itemSearchScene = new Scene(new StackPane(setupItemSearchMenu()), 640, 480);
             UIStage.setScene(itemSearchScene);
@@ -213,7 +213,7 @@ public class UIEngine extends Application {
         Button confirmButton = new Button("Confirm");
         
         ComboBox candidateLenders = new ComboBox();
-        for (Member member : DataLoader.allMembers) { // adds all members to the list of candidate donators
+        for (Member member : DataHandler.allMembers) { // adds all members to the list of candidate donators
             candidateLenders.getItems().add(member);
         }
         
@@ -336,7 +336,7 @@ public class UIEngine extends Application {
     }
     
     private void fillSearchResults(VBox searchResultsArea,String searchText) {
-        ArrayList<Item> searchResults = DataLoader.system.searchItems(searchText); // system contains every item in our project (books, dvds etc..)
+        ArrayList<Item> searchResults = DataHandler.system.searchItems(searchText); // system contains every item in our project (books, dvds etc..)
         searchResultsArea.getChildren().clear();
         for (Item item : searchResults) {
             Button resultButton = new Button(item.getTitle());
@@ -415,7 +415,7 @@ public class UIEngine extends Application {
                 String name = nameField.getText();
                 String address = addressField.getText();
                 String email = emailField.getText();
-                DataLoader.allMembers.add(new Member(name,address,email,0));
+                DataHandler.allMembers.add(new Member(name,address,email,0));
                 UIStage.setScene(mainMenuScene);
             }
         });
@@ -476,7 +476,7 @@ public class UIEngine extends Application {
                 String title = titleField.getText();
                 String author = directorField.getText();
                 String language = languageField.getText();
-                DataLoader.system.addDVD(title, author, (Member) donatedBy.getValue(),language,allAudioLanguages);
+                DataHandler.system.addDVD(title, author, (Member) donatedBy.getValue(),language,allAudioLanguages);
                 UIStage.setScene(mainMenuScene);
             }
         });
@@ -532,7 +532,7 @@ public class UIEngine extends Application {
                 String author = authorField.getText();
                 String isbn = isbnField.getText();
                 String language = languageField.getText();
-                DataLoader.system.addBook(title, author, (Member) donatedBy.getValue(), language, isbn);
+                DataHandler.system.addBook(title, author, (Member) donatedBy.getValue(), language, isbn);
                 UIStage.setScene(mainMenuScene);
             }
         });
@@ -566,7 +566,7 @@ public class UIEngine extends Application {
         );
         
         ComboBox donatedBy = new ComboBox();
-        for (Member member : DataLoader.allMembers) { // adds all members to the list of candidate donators
+        for (Member member : DataHandler.allMembers) { // adds all members to the list of candidate donators
             donatedBy.getItems().add(member);
         }
 
@@ -669,7 +669,7 @@ public class UIEngine extends Application {
         });
         
         searchMembersButton.setOnAction((e) -> {
-            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(DataLoader.allMembers)), 640, 480);
+            memberSearchScene = new Scene(new StackPane(setupMemberSearchMenu(DataHandler.allMembers)), 640, 480);
             UIStage.setScene(memberSearchScene);
         });
         
@@ -682,7 +682,7 @@ public class UIEngine extends Application {
         });
         
         saveDataButton.setOnAction((e) -> {
-            DataLoader.saveData(filenameField.getText());
+            DataHandler.saveData(filenameField.getText());
         });
         
         VBox vbox = new VBox(searchItemsButton,searchMembersButton,addMemberButton,addItemButton,saveholder);
@@ -695,7 +695,7 @@ public class UIEngine extends Application {
         
         // SETUP MISC
         UIStage = stage;
-        DataLoader.loadData(); // gets a list of the members from the DataLoader.java file
+        DataHandler.loadData(); // gets a list of the members from the DataLoader.java file
         
         //SETUP AND LODING MAIN MENU
         mainMenuScene = new Scene(setupMainMenu(), 640, 480);

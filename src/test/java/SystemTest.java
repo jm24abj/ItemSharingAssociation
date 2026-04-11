@@ -15,31 +15,31 @@ public class SystemTest {
     
     @BeforeEach
     public void setup(){
-        DataLoader.resetFieldsForTest();
-        DataLoader.loadData();
+        DataHandler.resetFieldsForTest();
+        DataHandler.loadData();
     }   
     @Test
     public void searchItem(){
         
     // tests item searching method in collection
-    Item item = DataLoader.system.getItem("The Shining");
+    Item item = DataHandler.system.getItem("The Shining");
     assertEquals("The Shining",item.getTitle());
     }
     
     @Test
     public void searchItemDonator(){
-    Item item1 = DataLoader.system.getItem("The Shining");
+    Item item1 = DataHandler.system.getItem("The Shining");
     assertNull(item1.getDonator());
     
-    Item item2 = DataLoader.system.getItem("Война и миръ");
+    Item item2 = DataHandler.system.getItem("Война и миръ");
     assertEquals("Andrey Bolotov",item2.getDonator());
     }
     
     @Test
     public void removeItem(){
-    int numOfEntries = DataLoader.system.getItems().size();
-    DataLoader.system.removeItem(DataLoader.system.getItem("The Shining"));
-    int newNumOfEntries = DataLoader.system.getItems().size();
+    int numOfEntries = DataHandler.system.getItems().size();
+    DataHandler.system.removeItem(DataHandler.system.getItem("The Shining"));
+    int newNumOfEntries = DataHandler.system.getItems().size();
     assertNotEquals(numOfEntries, newNumOfEntries);
     assertEquals(newNumOfEntries,newNumOfEntries -1);
     }
@@ -47,27 +47,27 @@ public class SystemTest {
     @Test
     public void addDvd(){
     String[] audioLanguages = {"English","Italian"};
-    DataLoader.system.addDVD("The Godfather", "Francis Ford Coppola", null,"English",audioLanguages);
-    assertNotNull(DataLoader.system.getItem("The Godfather"));
+    DataHandler.system.addDVD("The Godfather", "Francis Ford Coppola", null,"English",audioLanguages);
+    assertNotNull(DataHandler.system.getItem("The Godfather"));
     }
     
     @Test
     public void addBook(){
-    DataLoader.system.addBook("The Great Gatsby","F. Scott Fitzgerald", null, "English", "9781853260414");
-    assertNotNull(DataLoader.system.getItem("The Great Gatsby"));
+    DataHandler.system.addBook("The Great Gatsby","F. Scott Fitzgerald", null, "English", "9781853260414");
+    assertNotNull(DataHandler.system.getItem("The Great Gatsby"));
     
-    Book newBook = (Book) DataLoader.system.getItem("The Great Gatsby");
+    Book newBook = (Book) DataHandler.system.getItem("The Great Gatsby");
     assertEquals("F. Scott Fitzgerald",newBook.getAuthor());
     }
     
     @Test
     public void searchMember(){
-    assertEquals("John Wong",DataLoader.searchForMember("wong.j@aol.com"));
+    assertEquals("John Wong",DataHandler.searchForMember("wong.j@aol.com"));
     }
     
     @Test
     public void changeBookAuthor(){
-    Book targetBook = (Book) DataLoader.system.getItem("The Shining");
+    Book targetBook = (Book) DataHandler.system.getItem("The Shining");
     
     String oldAuthor = targetBook.getAuthor();
     targetBook.setAuthor("John Doe");
@@ -78,7 +78,7 @@ public class SystemTest {
     
     @Test
     public void changeDVDDirector(){
-    DVD targetDVD = (DVD) DataLoader.system.getItem("精武門");
+    DVD targetDVD = (DVD) DataHandler.system.getItem("精武門");
     
     String oldDirector = targetDVD.getDirector();
     targetDVD.setDirector("Jane Doe");
@@ -89,21 +89,21 @@ public class SystemTest {
     
     @Test
     public void checkIsbn(){
-        Book targetBook = (Book) DataLoader.system.getItem("The Shining");
+        Book targetBook = (Book) DataHandler.system.getItem("The Shining");
         assertEquals("9780345806789",targetBook.getIsbn());
     }
     
     @Test
     public void changeIsbn(){
-       Book targetBook = (Book) DataLoader.system.getItem("The Shining");
+       Book targetBook = (Book) DataHandler.system.getItem("The Shining");
        String originalIsbn = targetBook.getIsbn();
        targetBook.setIsbn("235435345345");
        assertNotEquals(originalIsbn,targetBook.getIsbn());
     }
     @Test
     public void setLoan(){
-        Book targetBook = (Book) DataLoader.system.getItem("Le Symbole Perdu");
-        Member borrower = DataLoader.searchForMember("a.smith@yahoo.com");
+        Book targetBook = (Book) DataHandler.system.getItem("Le Symbole Perdu");
+        Member borrower = DataHandler.searchForMember("a.smith@yahoo.com");
         int oldNumberOfLoans = borrower.getLoanItems().size();
         targetBook.loanTo(borrower);
         assertNotEquals(oldNumberOfLoans, borrower.getLoanItems().size());
@@ -112,7 +112,7 @@ public class SystemTest {
     
     @Test
     public void clearDonator(){
-        Book targetBook = (Book) DataLoader.system.getItem("Le Symbole Perdu");
+        Book targetBook = (Book) DataHandler.system.getItem("Le Symbole Perdu");
         targetBook.clearDonator();
         assertNull(targetBook.getDonator());
     }

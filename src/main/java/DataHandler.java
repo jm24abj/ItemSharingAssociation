@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 
 // To find the data file go to Other Sources/src/main/resources/input-1.dat
 
-public class DataLoader {
+public class DataHandler {
     
     public static Collection system  = new Collection(); // contains every item in our project (books, dvds etc..)
     public static ArrayList<Member> allMembers = new ArrayList<Member> ();
