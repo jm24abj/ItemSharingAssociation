@@ -32,7 +32,7 @@ public class SystemTest {
     assertNull(item1.getDonator());
     
     Item item2 = DataHandler.system.getItem("Война и миръ");
-    assertEquals("Andrey Bolotov",item2.getDonator());
+    assertEquals("Andrey Bolotov",item2.getDonator().getName());
     }
     
     @Test
@@ -41,7 +41,7 @@ public class SystemTest {
     DataHandler.system.removeItem(DataHandler.system.getItem("The Shining"));
     int newNumOfEntries = DataHandler.system.getItems().size();
     assertNotEquals(numOfEntries, newNumOfEntries);
-    assertEquals(newNumOfEntries,newNumOfEntries -1);
+    assertEquals(newNumOfEntries,numOfEntries -1);
     }
     
     @Test
@@ -62,7 +62,7 @@ public class SystemTest {
     
     @Test
     public void searchMember(){
-    assertEquals("John Wong",DataHandler.searchForMember("wong.j@aol.com"));
+    assertEquals("John Wong",DataHandler.searchForMember("wong.j@aol.com").getName());
     }
     
     @Test
