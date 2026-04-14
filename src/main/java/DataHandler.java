@@ -6,9 +6,10 @@ import java.util.Scanner;
 import java.io.PrintWriter;
 
 // To find the data file go to Other Sources/src/main/resources/input-1.dat
-
+// This is a utility class, not meant to be instantiated
 public class DataHandler {
-    
+    // public static fields allow direct acccess for the UI instead of having getters
+    // since a utility class doesn't need encapsulation
     public static Collection system  = new Collection(); // contains every item in our project (books, dvds etc..)
     public static ArrayList<Member> allMembers = new ArrayList<Member> ();
     
